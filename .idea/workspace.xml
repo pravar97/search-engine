@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c5f0356d-1485-4ad0-a3c5-a5bd5d821527" name="Default Changelist" comment="" />
+    <list default="true" id="c5f0356d-1485-4ad0-a3c5-a5bd5d821527" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/TTDS-Art-Search.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/TTDS-Art-Search.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/react.txt" beforeDir="false" />
+    </list>
+    <list id="7e24ef5a-a033-48c7-ad46-1b2cd666972b" name="Changes by vasnt" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -17,8 +25,14 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.language" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/art_se/src/components" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
@@ -54,34 +68,19 @@
     </task>
     <servers />
   </component>
-  <component name="WindowStateProjectService">
-    <state x="620" y="246" key="FileChooserDialogImpl" timestamp="1611065984695">
-      <screen x="0" y="0" width="1680" height="1010" />
-    </state>
-    <state x="620" y="246" key="FileChooserDialogImpl/0.0.1680.1010/1680.0.1280.984@0.0.1680.1010" timestamp="1611065984695" />
-    <state width="1659" height="272" key="GridCell.Tab.0.bottom" timestamp="1611067351051">
-      <screen x="0" y="0" width="1680" height="1010" />
-    </state>
-    <state width="1659" height="272" key="GridCell.Tab.0.bottom/0.0.1680.1010/1680.0.1280.984@0.0.1680.1010" timestamp="1611067351051" />
-    <state width="1659" height="272" key="GridCell.Tab.0.center" timestamp="1611067351051">
-      <screen x="0" y="0" width="1680" height="1010" />
-    </state>
-    <state width="1659" height="272" key="GridCell.Tab.0.center/0.0.1680.1010/1680.0.1280.984@0.0.1680.1010" timestamp="1611067351051" />
-    <state width="1659" height="272" key="GridCell.Tab.0.left" timestamp="1611067351051">
-      <screen x="0" y="0" width="1680" height="1010" />
-    </state>
-    <state width="1659" height="272" key="GridCell.Tab.0.left/0.0.1680.1010/1680.0.1280.984@0.0.1680.1010" timestamp="1611067351051" />
-    <state width="1659" height="272" key="GridCell.Tab.0.right" timestamp="1611067351051">
-      <screen x="0" y="0" width="1680" height="1010" />
-    </state>
-    <state width="1659" height="272" key="GridCell.Tab.0.right/0.0.1680.1010/1680.0.1280.984@0.0.1680.1010" timestamp="1611067351051" />
-    <state x="341" y="150" key="SettingsEditor" timestamp="1611065626562">
-      <screen x="0" y="0" width="1680" height="1010" />
-    </state>
-    <state x="341" y="150" key="SettingsEditor/0.0.1680.1010/1680.0.1280.984@0.0.1680.1010" timestamp="1611065626562" />
-    <state x="503" y="217" width="672" height="678" key="search.everywhere.popup" timestamp="1611067871936">
-      <screen x="0" y="0" width="1680" height="1010" />
-    </state>
-    <state x="503" y="217" width="672" height="678" key="search.everywhere.popup/0.0.1680.1010/1680.0.1280.984@0.0.1680.1010" timestamp="1611067871936" />
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.js" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>
