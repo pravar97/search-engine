@@ -1,4 +1,3 @@
-import './App.css';
 import React from 'react';
 import SearchPage from './pages/SearchPage';
 import ResultsPage from './pages/ResultsPage';

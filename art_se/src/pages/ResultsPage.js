@@ -1,38 +1,28 @@
-import React from 'react';
-import SearchBar from '../components/SearchBar';
 import PieceCard from '../components/PieceCard';
+import NavigBar from '../components/NavigBar';
 import { observer,inject } from 'mobx-react';
 
-import CardColumns from 'react-bootstrap/CardColumns'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import CardColumns from 'react-bootstrap/CardColumns';
 
 const ResultsPage = inject("searchStore")(
   observer(({ searchStore, history}) => {
 
     return (
-      <Row>
-        <Col>
-          <h2
-            style={{padding: "0.4em 0 1em 0.5em"}}
-            role="button"
-            onClick={() => history.push("/")}
-          >
-            LOGO
-          </h2>
-        </Col>
-        <Col xs={9}>
-          <div>
-            <SearchBar
-             onChange={e => searchStore.setQuery(e.target.value)}
-             query = {searchStore.getQuery()}
-             onSearch={() => {
-                searchStore.searchPieces();
-                history.push("/results");
-             }}
-            />
-          </div>
-          <div className="d-flex flex-wrap justify-content-center">
+      <div>
+        <NavigBar
+          onChange={e => searchStore.setQuery(e.target.value)}
+          getQuery = {searchStore.getQuery()}
+          onSearch={() => {
+             searchStore.searchPieces();
+             history.push("/results");
+          }}
+          onClick={() => history.push("/")}
+        />
+        <Container fluid style={{padding: "0 8% 0 8%"}}>
+          <Row>
             <CardColumns>
               { searchStore.getPieces().map(piece => {
                   if (piece) {
@@ -49,10 +39,9 @@ const ResultsPage = inject("searchStore")(
                  return null
               }) }
             </CardColumns>
-          </div>
-        </Col>
-        <Col/>
-      </Row>
+          </Row>
+        </Container>
+      </div>
     );
   })
 );

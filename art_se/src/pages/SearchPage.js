@@ -11,36 +11,37 @@ const SearchPage = inject("searchStore")(
   observer(({ searchStore, history }) => {
 
     return (
-      <Container class="d-flex align-self-center">
-        <Row />
-        <Row>
-          <Col >
-            <h1 class="text-center">LOGO</h1>
-            <SearchBar
-             onChange={e => searchStore.setQuery(e.target.value)}
-             query = {searchStore.getQuery()}
-             onSearch={() => {
-                searchStore.searchPieces();
-                history.push("/results");
-             }}
-            />
-          </Col>
-        </Row>
-        <Row className="text-center">
-          <Col class="align-self-center">
-            <button
-              onClick={() => {
-                 searchStore.searchPieces();
-                 history.push("/results");
-              }}
-              className="btn btn-outline-primary"
-              type="button"
-            >
-            Search
-            </button>
-          </Col>
-        </Row>
-      </Container>
+      <div class="hero_image">
+        <Container >
+          <Row>
+            <Col >
+              <h1 class="text-center">LOGO</h1>
+              <SearchBar
+               onChange={e => searchStore.setQuery(e.target.value)}
+               query = {searchStore.getQuery()}
+               onSearch={() => {
+                  searchStore.searchPieces();
+                  history.push("/results");
+               }}
+              />
+            </Col>
+          </Row>
+          <Row className="text-center">
+            <Col class="align-self-center">
+              <button
+                onClick={() => {
+                   searchStore.searchPieces();
+                   history.push("/results");
+                }}
+                className="btn btn-outline-primary"
+                type="button"
+              >
+              Search
+              </button>
+            </Col>
+          </Row>
+        </Container>
+      </div>
     );
   })
 );
