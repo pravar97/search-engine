@@ -3,3 +3,4 @@ Flask-Bootstrap==3.3.7.1
 Flask-PyMongo==2.3.0
 Flask-WTF==0.14.3
 dnspython==2.1.0
+Flask-Cors==3.0.10

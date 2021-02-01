@@ -17,6 +17,8 @@ Columns: _id, author, birth_year, birth_place, death_year, death_place, descript
 Table: artworks
 Columns: _id,
 '''
+
+
 @app.route('/result', methods=['POST', 'GET'])
 def home():
     artist = mongo.db.artworks.find()
@@ -26,5 +28,7 @@ def home():
         out[str(i)] = a
     print(out)
     return json.loads(json_util.dumps(out))
+
+
 if __name__ == '__main__':
     app.run(debug=True)
