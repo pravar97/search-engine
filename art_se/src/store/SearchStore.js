@@ -17,11 +17,16 @@ export default class SearchStore {
     return this.rootStore.pieceStore.pieces;
   }
 
+  @action getArtistPieces() {
+    return this.rootStore.pieceStore.pieces;
+  }
+
   @action getQuery() {
     return this.query;
   }
 
   @action selectPiece(piece) {
+    this.rootStore.pieceStore.getArtistPieces();
     this.rootStore.pieceStore.selectedPiece = piece;
   }
 

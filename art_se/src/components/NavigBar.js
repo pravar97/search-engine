@@ -8,19 +8,20 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 
+import logo from '../resources/images/logo.png';
+
 const NavigBar = observer(({ onSearch, onChange, getQuery, onClick }) => (
   <Container fluid>
     <Row>
       <Col>
-        <h2
-          style={{padding: "0.5em 0.3em 0em 2em"}}
-          role="button"
+        <img
+          style = {{cursor:'pointer', marginTop:'0.4em'}}
+          width="50"
           onClick={onClick}
-        >
-          LOGO
-        </h2>
+          src={logo}
+        />
       </Col>
-      <Col xs={9}>
+      <Col xs={10}>
         <div>
           <SearchBar
            onChange={onChange}

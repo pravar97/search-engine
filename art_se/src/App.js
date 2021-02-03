@@ -4,8 +4,8 @@ import ResultsPage from './pages/ResultsPage';
 import PiecePage from './pages/PiecePage';
 import RootStore from './store/RootStore';
 import { Provider } from "mobx-react";
-import { HashRouter as Router, Route, Switch } from "react-router-dom";
-//import { Switch, Route, withRouter } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import ScrollIntoView from "./components/ScrollUp";
 
 class App extends React.Component {
   stores = new RootStore();
@@ -13,16 +13,18 @@ class App extends React.Component {
   render() {
     return (
       <Provider {...this.stores}>
-        <Router onUpdate={() => window.scrollTo(0, 0)}>
+        <BrowserRouter>
           <div>
-            <Switch>
-              <Route exact path="/" component={SearchPage} />
-              <Route path="/results" component={ResultsPage} />
-              <Route path="/piece" component={PiecePage} />
-              <Route component={SearchPage} />
-            </Switch>
+            <ScrollIntoView>
+              <Switch>
+                <Route exact path="/" component={SearchPage} />
+                <Route path="/results" component={ResultsPage} />
+                <Route path="/piece" component={PiecePage} />
+                <Route component={SearchPage} />
+              </Switch>
+            </ScrollIntoView>
           </div>
-        </Router>
+        </BrowserRouter>
       </Provider>
     );
   }

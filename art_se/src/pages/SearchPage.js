@@ -7,15 +7,29 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 
+import logo from '../resources/images/logo.png';
+
 const SearchPage = inject("searchStore")(
   observer(({ searchStore, history }) => {
 
     return (
       <div class="hero_image">
-        <Container >
+        <Container>
+          <Row className="text-center">
+            <Col class="align-self-center">
+              <img
+                width = "120" height="120"
+                src={logo}
+              />
+            </Col>
+          </Row>
+          <Row className="text-center" style = {{paddingTop: '1em'}}>
+            <Col>
+              <h2> Art Search </h2>
+            </Col>
+          </Row>
           <Row>
-            <Col >
-              <h1 class="text-center">LOGO</h1>
+            <Col>
               <SearchBar
                onChange={e => searchStore.setQuery(e.target.value)}
                query = {searchStore.getQuery()}
@@ -35,6 +49,7 @@ const SearchPage = inject("searchStore")(
                 }}
                 className="btn btn-outline-primary"
                 type="button"
+                style = {{backgroundColor: "steelblue", color: "white", borderColor:"white"}}
               >
               Search
               </button>

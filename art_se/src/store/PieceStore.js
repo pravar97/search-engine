@@ -14,13 +14,12 @@ export class Piece {
   @observable school
   @observable image
 
-  constructor (author,title,date,century,technique,size,location,description,form,school, image) {
-    this.author = author;
+  constructor (author,title,date,timeframe,technique,location,description,form,school, image) {
+    this.author = author.split(',')[1] + " " + author.split(',')[0];
     this.title = title;
     this.date = date;
-    this.century = century;
+    this.timeframe = timeframe;
     this.technique = technique;
-    this.size = size;
     this.location = location;
     this.description = description;
     this.form = form;
@@ -33,37 +32,44 @@ export default class PieceStore {
 
   @observable selectedPiece = observable();
   @observable pieces = observable.array();
-
+  @observable artist_pieces = observable.array();
 
   @action searchPiece(query) {
-    const p2 = new Piece(query, "Picasso", "Painting", "https://static01.nyt.com/images/2018/03/02/arts/design/02picasso-print/01picasso1-superJumbo.jpg");
-    const pie = observable([p2]);
     console.log("making request")
     fetch('/result')
       .then(response => {
         console.log(response)
         return response.json()
       })
-      .then(json => this.addPieces(json, query))
+      .then(json => this.addPieces(json, this.pieces))
   }
 
-  @action addPieces(json, query) {
+  @action getArtistPieces() {
+    console.log("making request")
+    fetch('/result')
+      .then(response => {
+        console.log(response)
+        return response.json()
+      })
+      .then(json => this.addPieces(json, this.artist_pieces))
+  }
+
+  @action addPieces(json,array) {
     const pieces = []
     Object.values(json).forEach((piece) => {
       pieces.push(new Piece(
-        piece.author,
-        piece.title,
-        piece.date,
-        piece.century,
-        piece.technique,
-        piece.size,
-        piece.location,
-        piece.description,
-        piece.form,
-        piece.school,
-        "https://static01.nyt.com/images/2018/03/02/arts/design/02picasso-print/01picasso1-superJumbo.jpg"))
+        piece.AUTHOR,
+        piece.TITLE,
+        piece.DATE,
+        piece.TIMEFRAME,
+        piece.TECHNIQUE,
+        piece.LOCATION,
+        piece.DESCRIPTIONS,
+        piece.FORM,
+        piece.SCHOOL,
+        piece.IMAGE_URL))
     });
-    this.pieces.replace(pieces)
+    array.replace(pieces)
   }
 
   @action getSelectedPiece() {

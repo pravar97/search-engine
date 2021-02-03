@@ -21,10 +21,10 @@ Columns: _id,
 
 @app.route('/result', methods=['POST', 'GET'])
 def home():
-    artist = mongo.db.artworks.find()
-    alist = list(artist)[:10]
+    artist = mongo.db.art.find().limit(40)
+    alist = list(artist)
     out = {}
-    for i, a in enumerate(alist*5):
+    for i, a in enumerate(alist):
         out[str(i)] = a
     print(out)
     return json.loads(json_util.dumps(out))

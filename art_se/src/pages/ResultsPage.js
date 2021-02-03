@@ -9,22 +9,30 @@ import CardColumns from 'react-bootstrap/CardColumns';
 
 const ResultsPage = inject("searchStore")(
   observer(({ searchStore, history}) => {
-
+    const pieces = searchStore.getPieces();
     return (
       <div>
-        <NavigBar
-          onChange={e => searchStore.setQuery(e.target.value)}
-          getQuery = {searchStore.getQuery()}
-          onSearch={() => {
-             searchStore.searchPieces();
-             history.push("/results");
-          }}
-          onClick={() => history.push("/")}
-        />
-        <Container fluid style={{padding: "0 8% 0 8%"}}>
+        <div style={{padding: "0 0em 0em 1em"}}>
+          <NavigBar
+            onChange={e => searchStore.setQuery(e.target.value)}
+            getQuery = {searchStore.getQuery()}
+            onSearch={() => {
+               searchStore.searchPieces();
+               history.push("/results");
+            }}
+            onClick={() => history.push("/")}
+          />
+        </div>
+        <Container fluid style={{padding: "0 10% 0em 10%"}}>
           <Row>
+            <Col>
+              <h6 style={{color:"gray"}}> Retrieved {pieces.length} results </h6>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
             <CardColumns>
-              { searchStore.getPieces().map(piece => {
+              { pieces.map(piece => {
                   if (piece) {
                     return (
                       <PieceCard
@@ -39,6 +47,7 @@ const ResultsPage = inject("searchStore")(
                  return null
               }) }
             </CardColumns>
+            </Col>
           </Row>
         </Container>
       </div>

@@ -4,12 +4,12 @@ import { observer } from 'mobx-react'
 import Card from 'react-bootstrap/Card';
 
 const PieceList = observer(({ piece, onSelect }) => (
-  <Card className = "flex-wrap"
+  <Card
     bg="light"
     tag="a"
     onClick={onSelect}
     border="light"
-    style={{ cursor: "pointer", margin: "1em"}}
+    style={{ cursor: "pointer", margin: "0.7em 0 0 0"}}
     className="mb-2"
   >
     <Card.Img variant="top" src={piece.image} />
