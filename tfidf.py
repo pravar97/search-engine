@@ -15,7 +15,7 @@ def tfidf(n, index, q):
     for t in tokens:
         if t in index:
             rdocs = rdocs.union(index[t][1])
-
+    print(1)
     for d in rdocs:
         csum = 0.0
         for t in tokens:
@@ -24,6 +24,6 @@ def tfidf(n, index, q):
                     csum += (1 + log10(index[t][1][d])) * log10(n/index[t][0])
 
         sum[d] = round(csum, 4)
-
+    print(2)
     # qnum is query number previously extracted, Sorting based on value
     return sorted(sum.items(), key=lambda x: x[1], reverse=True)

@@ -31,7 +31,7 @@ def main():
 
     dblist = myclient.list_database_names()
 
-    artworks = mydb.artworks.find()
+    artworks = mydb.art.find()
     alist = list(artworks)
     docs = {}
     for a in alist:
