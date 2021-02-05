@@ -1,0 +1,29 @@
+import re
+from math import log10
+
+
+def tokenize(text):
+    return re.findall('[a-z0-9]+', text.lower())
+
+def tfidf(n, index, q):
+    # dictionary to return after getting filled
+    sum = {}
+
+    # Apply tokenisation, remove stop words and do stemming to query
+    tokens = tokenize(q)
+    rdocs = set()
+    for t in tokens:
+        if t in index:
+            rdocs = rdocs.union(index[t][1])
+
+    for d in rdocs:
+        csum = 0.0
+        for t in tokens:
+            if t in index:
+                if d in index[t][1]:
+                    csum += (1 + log10(index[t][1][d])) * log10(n/index[t][0])
+
+        sum[d] = round(csum, 4)
+
+    # qnum is query number previously extracted, Sorting based on value
+    return sorted(sum.items(), key=lambda x: x[1], reverse=True)

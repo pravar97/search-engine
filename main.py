@@ -1,13 +1,18 @@
 import json
+import pickle
+from collections import OrderedDict
 
-from bson import json_util
+from tfidf import *
+from bson import json_util, ObjectId
 from flask import Flask, render_template, request, jsonify
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
 from flask_pymongo import PyMongo
 from flask_cors import CORS
 
+
 app = Flask(__name__)
+app.config['JSON_SORT_KEYS'] = False
 CORS(app)
 app.config['SECRET_KEY'] = 'hijhih'
 app.config['MONGO_URI'] = \
@@ -23,30 +28,31 @@ Columns: _id,
 
 @app.route('/result', methods=['POST', 'GET'])
 def home():
-    artist = mongo.db.artists.find_one({"birth_year": 1552})
-    print(artist)
-    return json.loads(json_util.dumps(artist))
+    query = request.args.get('q')
+    with open('index.pkl', 'rb') as f:
+        index = pickle.load(f)
+    if query is None:
+        results = []
+    else:
+        results = tfidf(index[0], index[1], query)
+    out = {}
+    for r in results:
 
+        artwork = mongo.db.artworks.find_one({'_id': ObjectId(r[0])})
+        out[r[0]] = artwork
+
+    return json.loads(json_util.dumps(out))
+
+@app.route('/artist', methods=['POST', 'GET'])
+def artist():
+    artist = request.args.get('artist')
+    artwork = mongo.db.artworks.find({'author': artist})
+    out = {}
+    for a in list(artwork):
+        id = str(a.get('_id'))
+        out[id] = a
+
+    return json.loads(json_util.dumps(out))
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-'''
-(venv) p@p:~/Documents/ttds/TTDS-Art-Search/art_se$ npm start
-
-> client@0.1.0 start /home/p/Documents/ttds/TTDS-Art-Search/art_se
-> react-app-rewired start
-
-sh: 1: react-app-rewired: Permission denied
-npm ERR! code ELIFECYCLE
-npm ERR! errno 126
-npm ERR! client@0.1.0 start: `react-app-rewired start`
-npm ERR! Exit status 126
-npm ERR! 
-npm ERR! Failed at the client@0.1.0 start script.
-npm ERR! This is probably not a problem with npm. There is likely additional logging output above.
-
-npm ERR! A complete log of this run can be found in:
-npm ERR!     /home/p/.npm/_logs/2021-01-19T16_37_03_783Z-debug.log
-
-'''
