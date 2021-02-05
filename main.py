@@ -42,7 +42,7 @@ def home():
         page_size = 10
     if page_number is None:
         page_number = 1
-    for r in results[int(page_number)-1:int(page_size)]:
+    for r in results[int(page_number)-1:int(page_number)+int(page_size)]:
 
         artwork = mongo.db.art.find_one({'_id': ObjectId(r[0])})
         out[r[0]] = artwork
