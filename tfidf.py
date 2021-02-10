@@ -26,4 +26,6 @@ def tfidf(n, index, q):
         sum[d] = round(csum, 4)
     print(2)
     # qnum is query number previously extracted, Sorting based on value
-    return sorted(sum.items(), key=lambda x: x[1], reverse=True)
+    sorted_sum = sorted(sum.items(), key=lambda x: x[1], reverse=True)
+    print(sorted_sum[0])
+    return sorted_sum

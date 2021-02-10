@@ -53,7 +53,7 @@ export default class PieceStore {
 
   @action searchPiece(query) {
     console.log("making request")
-    fetch('/result?q=' + query)
+    fetch('https://ttds-group-1-project.nw.r.appspot.com/result?q=' + query)
       .then(response => {
         console.log(response)
         return response.json()
@@ -63,7 +63,7 @@ export default class PieceStore {
 
   @action getArtistPieces(artist) {
     console.log("making request")
-    fetch('/artist?artist=' + artist)
+    fetch('https://ttds-group-1-project.nw.r.appspot.com/artist?artist=' + artist)
       .then(response => {
         console.log(response)
         return response.json()
