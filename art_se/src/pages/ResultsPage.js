@@ -17,8 +17,9 @@ const ResultsPage = inject("searchStore")(
             onChange={e => searchStore.setQuery(e.target.value)}
             getQuery = {searchStore.getQuery()}
             onSearch={() => {
+               searchStore.clear();
                searchStore.searchPieces();
-               history.push("/results");
+               history.push("/result");
             }}
             onClick={() => history.push("/")}
           />

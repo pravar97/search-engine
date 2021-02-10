@@ -38,7 +38,7 @@ const PiecePage = inject("searchStore", "pieceStore")(
           <Row>
             <Col xs={0.05} style={{padding: "1.3em 0em 0em 1em"}}>
               <img style = {{cursor:'pointer'}} width = "30" height="30"
-                onClick = {() => history.push("/results")}
+                onClick = {() => history.push("/result")}
                 src="https://www.materialui.co/materialIcons/navigation/arrow_back_black_192x192.png"
               />
             </Col>
@@ -48,7 +48,7 @@ const PiecePage = inject("searchStore", "pieceStore")(
                 getQuery = {searchStore.getQuery()}
                 onSearch={() => {
                    searchStore.searchPieces();
-                   history.push("/results");
+                   history.push("/result");
                 }}
                 onClick={() => history.push("/")}
               />
@@ -57,7 +57,7 @@ const PiecePage = inject("searchStore", "pieceStore")(
         </Container>
         <Container style={{paddingTop: "0.7em", paddingLeft: "5%", paddingRight: "5%"}}>
           <Row className="justify-content-center">
-            <Image src={piece.image} fluid width = "50%" height="50%" />
+            <Image src={piece.image} height="400em"/>
           </Row>
           <Row style={{padding: "2em 0 0.6em 0"}}>
             <Col>
@@ -101,7 +101,7 @@ const PiecePage = inject("searchStore", "pieceStore")(
             </Col>
             <Col style={{paddingTop: "0em"}}>
               <CardColumns>
-                {searchStore.getArtistPieces().map(piece => {
+                {searchStore.getArtistPieces(piece.author).map(piece => {
                     if (piece) {
                       return (
                         <PieceCard

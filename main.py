@@ -23,7 +23,7 @@ Table: artists
 Columns: _id, author, birth_year, birth_place, death_year, death_place, description
 
 Table: artworks
-Columns: _id, 
+Columns: _id,
 '''
 
 @app.route('/result', methods=['POST', 'GET'])
@@ -52,7 +52,7 @@ def home():
 @app.route('/artist', methods=['POST', 'GET'])
 def artist():
     artist = request.args.get('artist')
-    artwork = mongo.db.art.find({'author': artist})
+    artwork = mongo.db.art.find({"AUTHOR": artist})
     out = {}
     for a in list(artwork):
         id = str(a.get('_id'))

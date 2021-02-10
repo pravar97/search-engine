@@ -4,11 +4,11 @@ import { observer } from "mobx-react";
 import Form from 'react-bootstrap/Form';
 
 const SearchBar = observer(({ onSearch, onChange, query }) => (
-  <div style={{padding: "1em 0 1em 0"}}>
+  <div style={{padding: "1em 5em 1em 5em"}}>
     <Form.Control
      type="text"
      key="random1"
-     placeholder={query != "" ? query : "Search"}
+     placeholder={"Search"}
      onChange={onChange}
      onKeyPress={event => event.key === "Enter" && onSearch()}
     />

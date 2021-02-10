@@ -1,5 +1,17 @@
 import { observable, action, computed } from "mobx";
 
+String.prototype.toProperCase = function () {
+  return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+};
+
+function printText(txt) {
+  if (txt == undefined) {
+    return "";
+  } else {
+    return txt;
+  }
+}
+
 export class Piece {
 
   @observable author
@@ -15,7 +27,8 @@ export class Piece {
   @observable image
 
   constructor (author,title,date,timeframe,technique,location,description,form,school, image) {
-    this.author = author.split(',')[1] + " " + author.split(',')[0];
+    this.author = printText(author.split(',')[1]) + " " + printText(author.split(',')[0].toProperCase());
+    this.author_no_format = author;
     this.title = title;
     this.date = date;
     this.timeframe = timeframe;
@@ -34,9 +47,13 @@ export default class PieceStore {
   @observable pieces = observable.array();
   @observable artist_pieces = observable.array();
 
+  @action clear() {
+    this.pieces = observable.array();
+  }
+
   @action searchPiece(query) {
     console.log("making request")
-    fetch('/result')
+    fetch('/result?q=' + query)
       .then(response => {
         console.log(response)
         return response.json()
@@ -44,9 +61,9 @@ export default class PieceStore {
       .then(json => this.addPieces(json, this.pieces))
   }
 
-  @action getArtistPieces() {
+  @action getArtistPieces(artist) {
     console.log("making request")
-    fetch('/result')
+    fetch('/artist?artist=' + artist)
       .then(response => {
         console.log(response)
         return response.json()
@@ -55,7 +72,7 @@ export default class PieceStore {
   }
 
   @action addPieces(json,array) {
-    const pieces = []
+    const pieces = [];
     Object.values(json).forEach((piece) => {
       pieces.push(new Piece(
         piece.AUTHOR,

@@ -18,7 +18,7 @@ class App extends React.Component {
             <ScrollIntoView>
               <Switch>
                 <Route exact path="/" component={SearchPage} />
-                <Route path="/results" component={ResultsPage} />
+                <Route path="/result" component={ResultsPage} />
                 <Route path="/piece" component={PiecePage} />
                 <Route component={SearchPage} />
               </Switch>

@@ -11,7 +11,8 @@ import logo from '../resources/images/logo.png';
 
 const SearchPage = inject("searchStore")(
   observer(({ searchStore, history }) => {
-
+    searchStore.clearQuery();
+    searchStore.clear();
     return (
       <div class="hero_image">
         <Container>
@@ -35,7 +36,7 @@ const SearchPage = inject("searchStore")(
                query = {searchStore.getQuery()}
                onSearch={() => {
                   searchStore.searchPieces();
-                  history.push("/results");
+                  history.push("/result");
                }}
               />
             </Col>
@@ -45,7 +46,7 @@ const SearchPage = inject("searchStore")(
               <button
                 onClick={() => {
                    searchStore.searchPieces();
-                   history.push("/results");
+                   history.push("/result");
                 }}
                 className="btn btn-outline-primary"
                 type="button"

@@ -13,12 +13,20 @@ export default class SearchStore {
     this.query = query;
   }
 
+  @action clear() {
+    this.rootStore.pieceStore.clear();
+  }
+
+  @action clearQuery() {
+    this.query = "";
+  }
+
   @action getPieces() {
     return this.rootStore.pieceStore.pieces;
   }
 
   @action getArtistPieces() {
-    return this.rootStore.pieceStore.pieces;
+    return this.rootStore.pieceStore.artist_pieces;
   }
 
   @action getQuery() {
@@ -26,7 +34,7 @@ export default class SearchStore {
   }
 
   @action selectPiece(piece) {
-    this.rootStore.pieceStore.getArtistPieces();
+    this.rootStore.pieceStore.getArtistPieces(piece.author_no_format);
     this.rootStore.pieceStore.selectedPiece = piece;
   }
 
@@ -34,9 +42,5 @@ export default class SearchStore {
     if(this.query != ""){
       this.rootStore.pieceStore.searchPiece(this.query);
     }
-  }
-
-  @action clearQuery() {
-    this.query = "";
   }
 }
