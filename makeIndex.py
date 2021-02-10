@@ -9,7 +9,7 @@ def tokenize(text):
 
 def makeIndex(docs):
     vocab = set().union(*docs.values())
-    out = {}  # {term : [document frequency, {DOCNO: count}]}
+    out = {}  # {term : [document frequency, {DOCNO: tf}]}
     for t in vocab:
 
         out[t] = [0, {}]

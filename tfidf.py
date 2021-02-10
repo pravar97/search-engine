@@ -12,11 +12,11 @@ def tfidf(n, index, q):
     # Apply tokenisation, remove stop words and do stemming to query
     tokens = tokenize(q)
     rdocs = set()
-    for t in tokens:
+    for t in tokens:  # O(t) where t is tokens in query
         if t in index:
             rdocs = rdocs.union(index[t][1])
     print(1)
-    for d in rdocs:
+    for d in rdocs:  # O(d) where d is total docs
         csum = 0.0
         for t in tokens:
             if t in index:

@@ -44,11 +44,14 @@ def home():
         if page_number is None:
             page_number = 1
         print(len(results))
+        obj_ids = []
         for r in results[int(page_number)-1:int(page_number)+int(page_size)]:
-            artwork = mongo.db.art.find_one({'_id': ObjectId(r[0])})
-
-            out[r[0]] = artwork
-            out[r[0]].pop('_id')
+            obj_ids.append(ObjectId(r[0]))
+        artwork = mongo.db.art.find({'_id': {'$in': obj_ids}})
+        for a in list(artwork):
+            id = str(a.pop('_id'))
+            out[id] = a
+            # out[r[0]].pop('_id')
 
     except Exception as inst:
         print(inst)
