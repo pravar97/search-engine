@@ -8,7 +8,7 @@ const SearchBar = observer(({ onSearch, onChange, query }) => (
     <Form.Control
      type="text"
      key="random1"
-     placeholder={"Search"}
+     placeholder={query != "" ? query : "Search"}
      onChange={onChange}
      onKeyPress={event => event.key === "Enter" && onSearch()}
     />
