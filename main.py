@@ -45,7 +45,7 @@ def home():
             page_number = 1
         print(len(results))
         obj_ids = []
-        for r in results[int(page_number)-1:int(page_number)+int(page_size)]:
+        for r in results[int(page_number)-1:int(page_number)-1+int(page_size)]:
             obj_ids.append(ObjectId(r[0]))
         artwork = mongo.db.art.find({'_id': {'$in': obj_ids}})
         for a in list(artwork):
