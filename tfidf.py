@@ -14,12 +14,12 @@ def tfidf(q):
     rdocs = set()
     with open('index/_n.pkl', 'rb') as f:
         n = pickle.load(f)
-
+    index = {}
     for t in tokens:  # O(t) where t is tokens in query
         try:
             with open('index/' + t + '.pkl', 'rb') as f:
-                index = pickle.load(f)
-                rdocs = rdocs.union(index[1])
+                index[t] = pickle.load(f)
+                rdocs = rdocs.union(index[t][1])
         except FileNotFoundError:
             pass
 
