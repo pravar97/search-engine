@@ -53,7 +53,7 @@ export default class PieceStore {
 
   @action searchPiece(query) {
     console.log("making request")
-    fetch('https://ttds-group-1-project.nw.r.appspot.com/result?q=' + query)
+    fetch('/result?q=' + query)
       .then(response => {
         console.log(response)
         return response.json()

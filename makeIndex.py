@@ -2,7 +2,7 @@ import pickle
 import re
 
 import pymongo
-from bson import ObjectId
+
 
 def tokenize(text):
     return re.findall('[a-z0-9]+', text.lower())
@@ -27,33 +27,29 @@ def makeIndex(docs):
                 else:
                     out[w][1][d] = 1/num
                     out[w][0] += 1
+    return out
 
-    return len(docs), out
 
 def main():
     myclient = pymongo.MongoClient("mongodb+srv://jacob:1mfeelingartsy@artdb-cluster.genfb.mongodb.net/artdb"
                                    "?retryWrites=true&w=majority")
     mydb = myclient["artdb"]
 
-    dblist = myclient.list_database_names()
-
-    artworks = mydb.art.find()
-    alist = list(artworks)
     docs = {}
-    for a in alist:
+    for a in mydb.art.find():
         id = str(a.pop('_id'))
         docs[id] = {}
 
         for k, v in a.items():
-
             tokens = tokenize(str(v))
             docs[id][len(tokens)] = docs[id].get(len(tokens), []) + tokens
-        # out[str(i)] = a
 
+    with open('index/_n.pkl', 'wb') as f:
+        pickle.dump(len(docs), f)
     index = makeIndex(docs)
-    print(index)
-    with open('index.pkl', 'wb') as f:
-        pickle.dump(index, f)
+    for i, v in index.items():
+        with open('index/'+i+'.pkl', 'wb') as f:
+            pickle.dump(v, f)
 
 
 main()
