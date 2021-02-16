@@ -1,36 +1,39 @@
 import re
 from math import log10
-import pickle
+import json
 
 def tokenize(text):
     return re.findall('[a-z0-9]+', text.lower())
 
 def tfidf(q):
     # dictionary to return after getting filled
-    sum = {}
-
-    # Apply tokenisation, remove stop words and do stemming to query
+    sum = {}    
     tokens = tokenize(q)
     rdocs = set()
-    with open('index/_n.pkl', 'rb') as f:
-        n = pickle.load(f)
+    with open('index/n.txt', 'r') as f:
+        n = int(f.read())
     index = {}
+    
     for t in tokens:  # O(t) where t is tokens in query
         try:
-            with open('index/' + t + '.pkl', 'rb') as f:
-                index[t] = pickle.load(f)
-                rdocs = rdocs.union(index[t][1])
+            with open('index/' + t + '.json') as f:
+                
+                j = json.load(f)
+                index[t] = j.copy()
+                j.pop('_df')
+                rdocs = rdocs.union(j)
+        
         except FileNotFoundError:
             pass
-
+    
     for d in rdocs:  # O(d) where d is total docs
         csum = 0.0
-        for t in tokens:
+        for t in tokens:            
             if t in index:
-                if d in index[t][1]:
-                    csum += (1 + log10(index[t][1][d])) * log10(n/index[t][0])
+                if d in index[t]:
 
-        sum[d] = round(csum, 4)
-    # qnum is query number previously extracted, Sorting based on value
-    sorted_sum = sorted(sum.items(), key=lambda x: x[1], reverse=True)
+                    csum += (1 + log10(index[t][d])) * log10(n/index[t]['_df'])
+        sum[int(d)] = round(csum, 4)
+    
+    sorted_sum = sorted(sum, key=sum.get, reverse=True)
     return sorted_sum

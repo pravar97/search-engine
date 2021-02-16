@@ -1,6 +1,5 @@
-import pickle
+import json
 import re
-
 import pymongo
 
 
@@ -17,16 +16,16 @@ def makeIndex(docs):
     out = {}  # {term : [document frequency, {DOCNO: tf}]}
     for t in vocab:
 
-        out[t] = [0, {}]
+        out[t] = {'_df': 0}
 
     for d in docs:
         for num in docs[d]:
             for w in docs[d][num]:
-                if d in out[w][1]:
-                    out[w][1][d] += 1/num
+                if d in out[w]:
+                    out[w][d] += 1/num
                 else:
-                    out[w][1][d] = 1/num
-                    out[w][0] += 1
+                    out[w][d] = 1/num
+                    out[w]['_df'] += 1
     return out
 
 
@@ -37,19 +36,20 @@ def main():
 
     docs = {}
     for a in mydb.art.find():
-        id = str(a.pop('_id'))
+        a.pop('_id')
+        id = a.pop('id')
         docs[id] = {}
 
         for k, v in a.items():
             tokens = tokenize(str(v))
             docs[id][len(tokens)] = docs[id].get(len(tokens), []) + tokens
 
-    with open('index/_n.pkl', 'wb') as f:
-        pickle.dump(len(docs), f)
+    with open('index/n.txt', 'w') as f:
+        f.write(str(len(docs)))
     index = makeIndex(docs)
     for i, v in index.items():
-        with open('index/'+i+'.pkl', 'wb') as f:
-            pickle.dump(v, f)
+        with open('index/'+i+'.json', 'w') as f:
+            json.dump(v, f)
 
 
 main()

@@ -1,7 +1,5 @@
 import json
 
-from collections import OrderedDict
-
 from tfidf import tfidf
 from flask import Flask, render_template, request, jsonify
 
@@ -26,36 +24,52 @@ Columns: _id,
 '''
 
 @app.route('/result', methods=['POST', 'GET'])
-def home():
-    try:
-        print(1)
-        query = request.args.get('q')
-        page_size = request.args.get('page_size')
-        page_number = request.args.get('page_number')
+def home(): 
+        
+    query = request.args.get('q')
 
-        if query is None:
-            results = []
-        else:
-            results = tfidf(query)
 
-        out = {}
+    if query is None:
+        results = []
+    else:
+        results = tfidf(query)
 
-        if page_size is None:
-            page_size = 10
-        if page_number is None:
-            page_number = 1
-        obj_ids = []
-        print(2)
-        for r in results[int(page_number)-1:int(page_number)-1+int(page_size)]:
-            obj_ids.append(ObjectId(r[0]))
+    out = {}
+    
+    for a in mongo.db.art.find({'id': {'$in': results[:5000]}}):
+        a.pop('_id')
+        out[a['id']] = a
 
-        for a in mongo.db.art.find({'_id': {'$in': obj_ids}}):
-            id = str(a.pop('_id'))
-            out[id] = a
+    return out
 
-    except Exception as inst:
-        print(inst)
-        return inst
+
+@app.route('/get_results', methods=['POST', 'GET'])
+def get_results():    
+        
+    query = request.args.get('q')
+
+    if query is None:
+        results = []
+    else:
+        results = tfidf(query)
+
+    return dict(enumerate(results))
+
+
+@app.route('/results2db', methods=['POST', 'GET'])
+def results2db():    
+        
+    r = request.args.get('r')
+
+    if r is None:
+        results = []
+    else:
+        results = r.split('_')
+
+    out = {}    
+    for a in mongo.db.art.find({'id': {'$in': results[:5000]}}):
+        a.pop('_id')
+        out[a['id']] = a
 
     return out
 
@@ -71,7 +85,6 @@ def artist():
         out[id].pop('_id')
 
     return out
-    # return json.loads(dumps(out))
 
 if __name__ == '__main__':
     app.run(debug=True)
