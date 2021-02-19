@@ -2,6 +2,8 @@ import React from 'react';
 import SearchBar from '../components/SearchBar';
 import { observer,inject } from 'mobx-react';
 
+import { useState } from 'react';
+
 import CardColumns from 'react-bootstrap/CardColumns';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -9,10 +11,11 @@ import Container from 'react-bootstrap/Container';
 
 import logo from '../resources/images/logo.png';
 
-const SearchPage = inject("searchStore")(
-  observer(({ searchStore, history }) => {
-    searchStore.clearQuery();
-    searchStore.clear();
+const SearchPage = inject("pieceStore")(
+  observer(({ pieceStore, history }) => {
+    pieceStore.clear();
+    pieceStore.clearQuery();
+    const [query, setQuery] = useState("");
     return (
       <div class="hero_image">
         <Container>
@@ -32,10 +35,11 @@ const SearchPage = inject("searchStore")(
           <Row>
             <Col>
               <SearchBar
-               onChange={e => searchStore.setQuery(e.target.value)}
-               query = {searchStore.getQuery()}
+               onChange={e => setQuery(e.target.value)}
+               query = {query}
                onSearch={() => {
-                  searchStore.searchPieces();
+                  pieceStore.setQuery(query);
+                  pieceStore.searchPieces();
                   history.push("/result");
                }}
               />
@@ -45,14 +49,27 @@ const SearchPage = inject("searchStore")(
             <Col class="align-self-center">
               <button
                 onClick={() => {
-                   searchStore.searchPieces();
+                   pieceStore.setQuery(query)
+                   pieceStore.searchPieces();
                    history.push("/result");
                 }}
                 className="btn btn-outline-primary"
                 type="button"
-                style = {{backgroundColor: "steelblue", color: "white", borderColor:"white"}}
+                style = {{backgroundColor: "#E8E8E8", color: "black", borderColor:"white", width:"9em", height:"2.2em"}}
               >
-              Search
+              Art search
+              </button>
+              <button
+                onClick={() => {
+                  pieceStore.setQuery(query)
+                  pieceStore.searchPieces();
+                  history.push("/piece");
+                }}
+                className="btn btn-outline-primary"
+                type="button"
+                style = {{backgroundColor: "#E8E8E8", color: "black", borderColor:"white", width:"9em", height:"2.2em", marginLeft:"2em"}}
+              >
+              I'm feelin artsy
               </button>
             </Col>
           </Row>

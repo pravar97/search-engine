@@ -15,7 +15,9 @@ const PieceList = observer(({ piece, onSelect }) => (
     <Card.Img variant="top" src={piece.image} />
     <Card.Body>
       <h10>{piece.author}</h10>
-      <h4 style={{fontStyle: 'italic'}}>{piece.title}</h4>
+      <h4 style={{fontStyle: 'italic'}}>
+        {piece.title.length < 70 ? piece.title : piece.title.substring(0,70) + "..."}
+      </h4>
       <h12>{piece.date}</h12>
     </Card.Body>
   </Card>
