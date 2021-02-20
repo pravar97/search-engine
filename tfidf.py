@@ -1,9 +1,15 @@
 import re
 from math import log10
 import json
+from unidecode import unidecode
+
 
 def tokenize(text):
+    text = unidecode(text)
+    text.replace('\'', "")
+    text.replace('-', "")
     return re.findall('[a-z0-9]+', text.lower())
+
 
 def tfidf(q):
     # dictionary to return after getting filled
@@ -16,14 +22,17 @@ def tfidf(q):
 
     for t in tokens:  # O(t) where t is tokens in query
         try:
-            with open('index/' + t + '.json') as f:
+            begin = t[:2]
+            if not begin.isalpha():
+                begin = '00'
+            with open('index/' + begin + '.json') as f:
 
-                j = json.load(f)
+                j = json.load(f)[t]
                 index[t] = j.copy()
                 j.pop('_df')
                 rdocs = rdocs.union(j)
 
-        except FileNotFoundError:
+        except:
             pass
 
     for d in rdocs:  # O(d) where d is total docs

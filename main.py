@@ -79,9 +79,9 @@ def artist():
     artwork = mongo.db.art.find({"author": artist})
     out = {}
     for a in list(artwork):
-        id = str(a.get('_id'))
+        id = str(a.get('id'))
         out[id] = a
-        out[id].pop('_id')
+        out[id].pop('id')
 
     return out
 

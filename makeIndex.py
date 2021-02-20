@@ -1,10 +1,19 @@
 import json
 import re
 import pymongo
+from nltk.corpus import stopwords
+from unidecode import unidecode
+import string
+import sys
+sw = set(stopwords.words('english'))
 
 
 def tokenize(text):
-    return re.findall('[a-z0-9]+', text.lower())
+    text = unidecode(text)
+    text.replace('\'', "")
+    text.replace('-', "")
+    text = set(re.findall('[a-z0-9]+', text.lower()))
+    return [t for t in text if t not in sw]
 
 
 def makeIndex(docs):
@@ -36,7 +45,10 @@ def main():
     mydb = myclient["artdb"]
 
     docs = {}
+    print('1')
+    i=0
     for a in mydb.art.find(projection={'id': True, 'text-data': True, 'description': True}):
+        sys.stdout.write(f"\rChecking row - {i}")
         a.pop('_id')
         id = a.pop('id')
         docs[id] = {}
@@ -45,12 +57,29 @@ def main():
         for k, v in a.items():
             tokens = tokenize(str(v))
             docs[id][field2weights[k]] = docs[id].get(field2weights[k], []) + tokens
+        i+=1
 
+    print('2')
     with open('index/n.txt', 'w') as f:
         f.write(str(len(docs)))
     index = makeIndex(docs)
+    files = {'00': {}}
+    alphabet = list(string.ascii_lowercase)
+    for a_1 in alphabet + ['']:
+        for a_2 in alphabet + ['']:
+            files[a_1+a_2] = {}
+    print(files)
+    print('3')
     for i, v in index.items():
-        with open('index/'+i+'.json', 'w') as f:
+        begin = i[:2]
+        if not begin.isalpha():
+            begin = '00'
+
+        files[begin].update({i: v})
+
+    print('4')
+    for key, v in files.items():
+        with open('index/'+key+'.json', 'w') as f:
             json.dump(v, f)
 
 
