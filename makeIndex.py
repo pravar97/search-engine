@@ -6,6 +6,7 @@ import pymongo
 def tokenize(text):
     return re.findall('[a-z0-9]+', text.lower())
 
+
 def makeIndex(docs):
     vocab = set()
     for d in docs:
@@ -13,7 +14,7 @@ def makeIndex(docs):
             for w in docs[d][num]:
                 vocab.add(w)
 
-    out = {}  # {term : [document frequency, {DOCNO: tf}]}
+    out = {}  # {term : {DOCNO*: tf, _df: df}}
     for t in vocab:
 
         out[t] = {'_df': 0}
@@ -22,9 +23,9 @@ def makeIndex(docs):
         for num in docs[d]:
             for w in docs[d][num]:
                 if d in out[w]:
-                    out[w][d] += 1/num
+                    out[w][d] += num
                 else:
-                    out[w][d] = 1/num
+                    out[w][d] = num
                     out[w]['_df'] += 1
     return out
 
@@ -35,14 +36,15 @@ def main():
     mydb = myclient["artdb"]
 
     docs = {}
-    for a in mydb.art.find():
+    for a in mydb.art.find(projection={'id': True, 'text-data': True, 'description': True}):
         a.pop('_id')
         id = a.pop('id')
         docs[id] = {}
-
+        # Dict to map fields to weights
+        field2weights = {'text-data': 2, 'description': 1}
         for k, v in a.items():
             tokens = tokenize(str(v))
-            docs[id][len(tokens)] = docs[id].get(len(tokens), []) + tokens
+            docs[id][field2weights[k]] = docs[id].get(field2weights[k], []) + tokens
 
     with open('index/n.txt', 'w') as f:
         f.write(str(len(docs)))
