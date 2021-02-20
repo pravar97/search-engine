@@ -3,7 +3,6 @@ import { observer } from 'mobx-react'
 
 import SearchBar from './SearchBar'
 
-import NavBar from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
@@ -34,5 +33,7 @@ const NavigBar = observer(({ onSearch, onChange, getQuery, onClick }) => (
     </Row>
   </Container>
 ));
+
+
 
 export default NavigBar;

@@ -24,8 +24,8 @@ Columns: _id,
 '''
 
 @app.route('/result', methods=['POST', 'GET'])
-def home(): 
-        
+def home():
+
     query = request.args.get('q')
 
 
@@ -35,7 +35,7 @@ def home():
         results = tfidf(query)
 
     out = {}
-    
+
     for a in mongo.db.art.find({'id': {'$in': results[:5000]}}):
         a.pop('_id')
         out[a['id']] = a
@@ -44,8 +44,8 @@ def home():
 
 
 @app.route('/get_results', methods=['POST', 'GET'])
-def get_results():    
-        
+def get_results():
+
     query = request.args.get('q')
 
     if query is None:
@@ -55,18 +55,17 @@ def get_results():
 
     return dict(enumerate(results))
 
-
 @app.route('/results2db', methods=['POST', 'GET'])
-def results2db():    
-        
+def results2db():
+
     r = request.args.get('r')
 
     if r is None:
         results = []
     else:
-        results = r.split('_')
+        results = list(json.loads(r))
 
-    out = {}    
+    out = {}
     for a in mongo.db.art.find({'id': {'$in': results[:5000]}}):
         a.pop('_id')
         out[a['id']] = a
@@ -77,7 +76,7 @@ def results2db():
 @app.route('/artist', methods=['POST', 'GET'])
 def artist():
     artist = request.args.get('artist')
-    artwork = mongo.db.art.find({"AUTHOR": artist})
+    artwork = mongo.db.art.find({"author": artist})
     out = {}
     for a in list(artwork):
         id = str(a.get('_id'))

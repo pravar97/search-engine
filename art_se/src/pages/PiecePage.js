@@ -26,15 +26,16 @@ const DescriptionText = ({tag, value}) => (
   <h6> {tag}: <span style = {{color:"Gray"}}> {value}  </span> </h6>
 )
 
-const PiecePage = inject("searchStore", "pieceStore")(
-  observer(({ searchStore, pieceStore, history}) => {
-    const piece = pieceStore.getSelectedPiece();
+const PiecePage = inject("pieceStore")(
+  observer(({ pieceStore, history}) => {
+    const piece = pieceStore.selectedPiece;
     const [open, setOpen] = useState(false);
-    const ind = piece.description.indexOf('.')
+    const [query, setQuery] = useState(pieceStore.query);
+    const ind = piece.description!= null ? piece.description.indexOf('.') : -1
     //var description = piece.description.substring(0,0.3*piece.description.length) + "...";
     return (
       <div>
-      <Container fluid>
+      <Container fluid style = {{marginBottom: "-1em"}}>
           <Row>
             <Col xs={0.05} style={{padding: "1.3em 0em 0em 1em"}}>
               <img style = {{cursor:'pointer'}} width = "30" height="30"
@@ -44,10 +45,12 @@ const PiecePage = inject("searchStore", "pieceStore")(
             </Col>
             <Col>
               <NavigBar
-                onChange={e => searchStore.setQuery(e.target.value)}
-                getQuery = {searchStore.getQuery()}
+                onChange={e => setQuery(e.target.value)}
+                getQuery = {query}
                 onSearch={() => {
-                   searchStore.searchPieces();
+                   pieceStore.clear();
+                   pieceStore.setQuery(query);
+                   pieceStore.searchPieces();
                    history.push("/result");
                 }}
                 onClick={() => history.push("/")}
@@ -55,6 +58,7 @@ const PiecePage = inject("searchStore", "pieceStore")(
             </Col>
           </Row>
         </Container>
+        <ColoredLine color = "LightGrey"/>
         <Container style={{paddingTop: "0.7em", paddingLeft: "5%", paddingRight: "5%"}}>
           <Row className="justify-content-center">
             <Image src={piece.image} height="400em"/>
@@ -76,6 +80,7 @@ const PiecePage = inject("searchStore", "pieceStore")(
               <DescriptionText tag={"Timeframe"} value={piece.timeframe} />
               <DescriptionText tag={"Location"} value={piece.location} />
               <DescriptionText tag={"School"} value={piece.school} />
+              <h6> Source: <span style = {{color:"Gray"}}> <a href={piece.source_url}>{piece.source.toUpperCase()}</a>  </span> </h6>
             </Col>
             {piece.description &&
               <Col>
@@ -95,19 +100,19 @@ const PiecePage = inject("searchStore", "pieceStore")(
               </Col>
             }
           </Row>
-          <Row style={{paddingTop: "2em"}}>
+          <Row style={{paddingTop: "2em", paddingBottom: "1em"}}>
             <Col>
               <h3>More by {piece.author}</h3>
             </Col>
             <Col style={{paddingTop: "0em"}}>
               <CardColumns>
-                {searchStore.getArtistPieces(piece.author).map(piece => {
+                {pieceStore.artist_pieces.map(piece => {
                     if (piece) {
                       return (
                         <PieceCard
                           piece = {piece}
                           onSelect = {() => {
-                            searchStore.selectPiece(piece);
+                            pieceStore.selectPiece(piece);
                             history.push("/piece");
                           }}
                         />
