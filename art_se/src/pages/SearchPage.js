@@ -4,18 +4,20 @@ import { observer,inject } from 'mobx-react';
 
 import { useState } from 'react';
 
-import CardColumns from 'react-bootstrap/CardColumns';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
+import Collapse from 'react-bootstrap/Collapse';
+import Form from 'react-bootstrap/Form';
 
 import logo from '../resources/images/logo.png';
 
 const SearchPage = inject("pieceStore")(
   observer(({ pieceStore, history }) => {
+    const [query, setQuery] = useState("");
+    const [open, setOpen] = useState(false);
     pieceStore.clear();
     pieceStore.clearQuery();
-    const [query, setQuery] = useState("");
     return (
       <div class="hero_image">
         <Container>
@@ -23,6 +25,7 @@ const SearchPage = inject("pieceStore")(
             <Col class="align-self-center">
               <img
                 width = "120" height="120"
+                alt="logo"
                 src={logo}
               />
             </Col>
@@ -37,21 +40,24 @@ const SearchPage = inject("pieceStore")(
               <SearchBar
                onChange={e => setQuery(e.target.value)}
                query = {query}
-               onSearch={() => {
+               onSearch={(e) => {if (query !== "" ){
                   pieceStore.setQuery(query);
                   pieceStore.searchPieces();
                   history.push("/result");
-               }}
+                }
+              }}
               />
             </Col>
           </Row>
+
           <Row className="text-center">
             <Col class="align-self-center">
               <button
-                onClick={() => {
+                onClick={() => {if (query !== ""){
                    pieceStore.setQuery(query)
                    pieceStore.searchPieces();
                    history.push("/result");
+                 }
                 }}
                 className="btn btn-outline-primary"
                 type="button"
@@ -60,10 +66,11 @@ const SearchPage = inject("pieceStore")(
               Art search
               </button>
               <button
-                onClick={() => {
+                onClick={() => {if (query !== ""){
                   pieceStore.setQuery(query)
-                  pieceStore.searchPieces();
+                  pieceStore.feelingArtsy();
                   history.push("/piece");
+                }
                 }}
                 className="btn btn-outline-primary"
                 type="button"
@@ -71,6 +78,35 @@ const SearchPage = inject("pieceStore")(
               >
               I'm feelin artsy
               </button>
+            </Col>
+          </Row>
+
+          <Row className="text-center" style = {{paddingTop:"1em"}}>
+            <Col class="align-self-center">
+              <p
+                style = {{fontSize: "10%"}}
+                onClick={() => setOpen(!open)}
+                aria-controls="example-collapse-text"
+                aria-expanded={open}
+                style = {{cursor:'pointer', color:"Gray"}}
+              >
+                Advanced Search
+              </p>
+              <Collapse in={open}>
+              <Form style = {{paddingLeft:"20%", paddingRight:"20%"}} >
+                <Form.Row>
+                  <Form.Group as={Col} controlId="formGridEmail" >
+                    <Form.Label>Title</Form.Label>
+                    <Form.Control type="email" placeholder="Enter title" />
+                  </Form.Group>
+
+                  <Form.Group as={Col} controlId="formGridPassword">
+                    <Form.Label>Artist</Form.Label>
+                    <Form.Control type="password" placeholder="Enter artist" />
+                  </Form.Group>
+                </Form.Row>
+                </Form>
+              </Collapse>
             </Col>
           </Row>
         </Container>

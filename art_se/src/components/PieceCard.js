@@ -3,6 +3,8 @@ import { observer } from 'mobx-react'
 
 import Card from 'react-bootstrap/Card';
 
+import placeholder from '../resources/images/placeholder.png';
+
 const PieceList = observer(({ piece, onSelect }) => (
   <Card
     bg="light"
@@ -11,14 +13,20 @@ const PieceList = observer(({ piece, onSelect }) => (
     border="light"
     style={{ cursor: "pointer", margin: "0.7em 0 0 0"}}
     className="mb-2"
+     key= {piece.title}
   >
-    <Card.Img variant="top" src={piece.image} />
+    <Card.Img variant="top" src={piece.image} onError={(e) => {
+     e.target.src = placeholder // some replacement image
+    }}
+   style={{
+    maxHeight: 600,
+    }}/>
     <Card.Body>
-      <h10>{piece.author}</h10>
+      <p>{piece.author}</p>
       <h4 style={{fontStyle: 'italic'}}>
         {piece.title.length < 70 ? piece.title : piece.title.substring(0,70) + "..."}
       </h4>
-      <h12>{piece.date}</h12>
+      <p>{piece.date}</p>
     </Card.Body>
   </Card>
 ));

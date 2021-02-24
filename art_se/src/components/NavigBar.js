@@ -16,6 +16,7 @@ const NavigBar = observer(({ onSearch, onChange, getQuery, onClick }) => (
         <img
           style = {{cursor:'pointer', marginTop:'0.4em'}}
           width="50"
+          alt=""
           onClick={onClick}
           src={logo}
         />

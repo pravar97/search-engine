@@ -7,16 +7,16 @@ import Form from 'react-bootstrap/Form';
 
 const SearchBar = observer(({ onSearch, onChange, query }) => (
   <div style={{padding: "1em 5em 1em 5em"}}>
-  <Form>
+  <Form className = "form-custom">
     <Form.Control
      style={{borderRadius: '100px', paddingLeft:'1.2em'}}
      //style = {{background: "#fbfbfb"}}
      type="text"
      key="random1"
      value={query}
-     placeholder={query != "" ? "": "Search"}
+     placeholder={query !== "" ? "": "Search"}
      onChange={onChange}
-     onKeyPress={event => event.key === "Enter" && onSearch()}
+     onKeyPress={event => query !== "" && event.key === "Enter" && onSearch()}
     />
   </Form>
   </div>

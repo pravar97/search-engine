@@ -1,11 +1,12 @@
 import { observable, action, computed } from "mobx";
 
+
 String.prototype.toProperCase = function () {
   return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 };
 
 function printText(txt) {
-  if (txt == undefined) {
+  if (txt === undefined) {
     return "";
   } else {
     return txt;
@@ -53,10 +54,12 @@ export default class PieceStore {
   @observable selectedPiece = observable();
   @observable pieces = observable.array();
   @observable artist_pieces = observable.array();
-  @observable scroll_ind = 0;
+  @observable pieceArr = observable.array();
+  @observable scroll_ind: number = 0;
   @observable ids = observable.array();
   @observable query = "";
-  @observable timeTaken;
+  @observable timeTaken = 0;
+  @observable lucky = false;
 
   @action setQuery(query) {
     this.query = query;
@@ -66,50 +69,88 @@ export default class PieceStore {
     this.query = ""
   }
 
+  @action clearSelectedPiece() {
+    this.selectedPiece = observable();
+    this.artist_pieces = observable.array();
+  }
+
+
   @action clear() {
     console.log("Clearing pieces")
     this.pieces = observable.array();
     this.artist_pieces = observable.array();
+    this.pieceArr = observable.array();
     this.selectedPiece = null;
     this.scroll_ind = 0
     this.timeTaken = null;
     this.ids = observable.array();
+    this.lucky = false;
   }
 
   @action selectPiece(piece) {
     this.getArtistPieces(piece.author_no_format);
+    this.pieceArr.push("0")
     console.log(this.artist_pieces)
     this.selectedPiece = piece;
   }
 
   @action searchPieces() {
     console.log("Searching pieces")
-    if(this.query != ""){
+    if(this.query !== ""){
       const time =  performance.now();
       this.searchPiece(this.query);
       this.timeTaken =  performance.now() - time;
     }
   }
 
-  @action searchPiece(query) {
+  @action searchPiece() {
     console.log("making request for ids")
-    fetch('/get_results?q=' + query)
+    fetch('/get_results?q=' + this.query)
       .then(response => {
         console.log(response)
         return response.json()
       })
       .then(json => {
         const ids = Object.values(json)
-        const sliced_ids = ids.slice(this.scroll_ind,this.scroll_ind+25)
-        this.scroll_ind = this.scroll_ind + 25;
+        console.log(json)
+        const sliced_ids = ids.slice(this.scroll_ind,this.scroll_ind+12)
+        this.scroll_ind = this.scroll_ind + 12;
         this.ids = ids;
         this.getPieces(sliced_ids)
       })
   }
 
+  @action feelingArtsy() {
+    this.lucky = true
+    console.log("making request for ids")
+    fetch('/get_results?q=' + this.query)
+      .then(response => {
+        console.log(response)
+        return response.json()
+      })
+      .then(json => {
+        const ids = Object.values(json)
+        this.ids = ids;
+        this.getLuckyPiece([this.ids[0]])
+      })
+  }
+
+  @action getLuckyPiece(piece_id){
+    console.log("making request for lucky piece")
+    fetch('/results2db?r=' + JSON.stringify(piece_id))
+      .then(response => {
+        console.log(response)
+        return response.json()
+      })
+      .then(json => {
+        this.addSelectedPiece(json);
+        this.pieceArr.push("0")
+      })
+  }
+
   @action loadMore() {
-    const sliced_ids = this.ids.slice(this.scroll_ind,this.scroll_ind+25)
-    this.scroll_ind = this.scroll_ind + 25;
+    const sliced_ids = this.ids.slice(this.scroll_ind,this.scroll_ind+12)
+    this.scroll_ind = this.scroll_ind + 12;
     this.getPieces(sliced_ids)
   }
 
@@ -131,6 +172,27 @@ export default class PieceStore {
         return response.json()
       })
       .then(json => this.addPieces(json, this.artist_pieces))
+  }
+
+  @action addSelectedPiece(json) {
+    console.log(json)
+    const pieces = [];
+    Object.values(json).forEach((piece) => {
+      pieces.push(new Piece(
+        piece.author,
+        piece.title,
+        piece.date,
+        piece.medium,
+        piece.description,
+        piece.form,
+        piece.school,
+        piece.image_url,
+        piece.source,
+        piece.source_url,
+      ))
+    });
+    this.selectedPiece = pieces[0];
+    this.getArtistPieces(pieces[0].author_no_format);
   }
 
   @action addPieces(json,array) {
@@ -157,3 +219,12 @@ export default class PieceStore {
     return this.selectedPiece;
   }
 }
+
+// this.pieces = observable.array();
+// this.artist_pieces = observable.array();
+// this.pieceArr = observable.array();
+// this.selectedPiece = null;
+// this.scroll_ind = 0
+// this.timeTaken = null;
+// this.ids = observable.array();
+// this.lucky = false;

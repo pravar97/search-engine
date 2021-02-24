@@ -2,7 +2,7 @@ import PieceCard from '../components/PieceCard';
 import NavigBar from '../components/NavigBar';
 import { observer,inject } from 'mobx-react';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { Ellipsis, Ring } from 'react-spinners-css';
 
@@ -10,8 +10,6 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import CardColumns from 'react-bootstrap/CardColumns';
-import Button from 'react-bootstrap/Button';
-
 import {BottomScrollListener} from 'react-bottom-scroll-listener';
 
 const ColoredLine = ({ color }) => (
@@ -27,19 +25,21 @@ const ColoredLine = ({ color }) => (
 
 const ResultsPage = inject("pieceStore")(
   observer(({ pieceStore, history}) => {
-    const pieces = pieceStore.pieces;
     const [query, setQuery] = useState(pieceStore.query);
+    const pieces = pieceStore.pieces;
+    pieceStore.clearSelectedPiece();
     return (
       <div>
         <div style={{padding: "0 0em 0em 1em", marginBottom: "-1em"}}>
           <NavigBar
             onChange={e => setQuery(e.target.value)}
             getQuery = {query}
-            onSearch={() => {
+            onSearch={(e) => {if (query !== ""){
                pieceStore.clear();
                pieceStore.setQuery(query);
                pieceStore.searchPieces();
                history.push("/result");
+             }
             }}
             onClick={() => history.push("/")}
           />
@@ -48,7 +48,7 @@ const ResultsPage = inject("pieceStore")(
         <Container fluid style={{padding: "0 10% 0em 10%"}}>
           <Row>
             <Col>
-              {pieces.length == 0 ?
+              {pieces.length === 0 ?
                 <div>
                   <span style={{float:'left'}}>
                     <h6 style={{color:"gray"}}> Retrieving results </h6>
@@ -88,7 +88,7 @@ const ResultsPage = inject("pieceStore")(
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        {pieces.length != pieceStore.ids.length &&
+        {pieces.length !== pieceStore.ids.length &&
           <Ring color = "gray" size = {35}/>
         }
         </div>

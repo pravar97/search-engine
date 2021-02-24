@@ -2,7 +2,7 @@ import PieceStore from './PieceStore';
 
 class RootStore {
   constructor() {
-    this.pieceStore = new PieceStore(this);
+    this.pieceStore = new PieceStore();
   }
 }
 
