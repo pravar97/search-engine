@@ -1,11 +1,13 @@
 import json
 import re
 import pymongo
-from nltk.corpus import stopwords
+from nltk import corpus, download
 from unidecode import unidecode
 import string
 import sys
-sw = set(stopwords.words('english'))
+
+download('stopwords')
+sw = set(corpus.stopwords.words())
 
 
 def tokenize(text):
@@ -27,16 +29,19 @@ def makeIndex(docs):
     for t in vocab:
 
         out[t] = {'_df': 0}
-
+    tdl = 0
     for d in docs:
+        dl = 0
         for num in docs[d]:
+            dl += len(docs[d][num])
             for w in docs[d][num]:
                 if d in out[w]:
-                    out[w][d] += num
+                    out[w][d][0] += num
                 else:
-                    out[w][d] = num
+                    out[w][d] = [num, dl]
                     out[w]['_df'] += 1
-    return out
+        tdl += dl
+    return out, tdl
 
 
 def main():
@@ -45,42 +50,43 @@ def main():
     mydb = myclient["artdb"]
 
     docs = {}
-    print('1')
-    i=0
+    i=100
+    total_docs = mydb.art.count()
     for a in mydb.art.find(projection={'id': True, 'text-data': True, 'description': True}):
-        sys.stdout.write(f"\rChecking row - {i}")
+        sys.stdout.write(f"\rRetrieving and processing Documents: {i//total_docs}%")
         a.pop('_id')
         id = a.pop('id')
         docs[id] = {}
         # Dict to map fields to weights
-        field2weights = {'text-data': 2, 'description': 1}
+        field2weights = {'text-data': 4, 'description': 1}
         for k, v in a.items():
             tokens = tokenize(str(v))
             docs[id][field2weights[k]] = docs[id].get(field2weights[k], []) + tokens
-        i+=1
-
-    print('2')
+        i+=100
+    n = len(docs)
     with open('index/n.txt', 'w') as f:
-        f.write(str(len(docs)))
-    index = makeIndex(docs)
-    files = {'00': {}}
+        f.write(str(n))
+    index, tdl = makeIndex(docs)
+    with open('index/adl.txt', 'w') as f:
+        f.write(str(tdl/n))
+    files = {'000': {}}
     alphabet = list(string.ascii_lowercase)
     for a_1 in alphabet + ['']:
         for a_2 in alphabet + ['']:
-            files[a_1+a_2] = {}
-    print(files)
-    print('3')
+            for a_3 in alphabet + ['']:
+                files[a_1+a_2+a_3] = {}
+
     for i, v in index.items():
-        begin = i[:2]
+        begin = i[:3]
         if not begin.isalpha():
-            begin = '00'
+            begin = '000'
 
         files[begin].update({i: v})
 
-    print('4')
     for key, v in files.items():
-        with open('index/'+key+'.json', 'w') as f:
-            json.dump(v, f)
+        if v:
+            with open('index/'+key+'.json', 'w') as f:
+                json.dump(v, f)
 
 
 main()

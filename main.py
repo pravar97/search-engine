@@ -1,6 +1,6 @@
 import json
 
-from tfidf import tfidf
+from rank import rank
 from flask import Flask, render_template, request, jsonify
 
 
@@ -28,13 +28,12 @@ def home():
 
     query = request.args.get('q')
 
-
     if query is None:
         results = []
     else:
-        results = tfidf(query)
+        results, b = rank(query, bm25=True)
 
-    out = {}
+    out = dict.fromkeys(results[:5000])
 
     for a in mongo.db.art.find({'id': {'$in': results[:5000]}}):
         a.pop('_id')
@@ -51,7 +50,7 @@ def get_results():
     if query is None:
         results = []
     else:
-        results = tfidf(query)
+        results = rank(query, True)
 
     return dict(enumerate(results))
 
@@ -65,7 +64,7 @@ def results2db():
     else:
         results = list(json.loads(r))
 
-    out = {}
+    out = dict.fromkeys(results[:5000])
     for a in mongo.db.art.find({'id': {'$in': results[:5000]}}):
         a.pop('_id')
         out[a['id']] = a
@@ -76,14 +75,14 @@ def results2db():
 @app.route('/artist', methods=['POST', 'GET'])
 def artist():
     artist = request.args.get('artist')
-    artwork = mongo.db.art.find({"author": artist})
     out = {}
-    for a in list(artwork):
+    for a in mongo.db.art.find({"author": artist}):
         id = str(a.get('id'))
         out[id] = a
         out[id].pop('id')
 
     return out
+
 
 if __name__ == '__main__':
     app.run(debug=True)
