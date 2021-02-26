@@ -57,4 +57,4 @@ def rank(q, bm25=False):
 
     sorted_sum = sorted(sum, key=sum.get, reverse=True)
 
-    return sorted_sum, sum
+    return sorted_sum

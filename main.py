@@ -31,7 +31,7 @@ def home():
     if query is None:
         results = []
     else:
-        results, b = rank(query, bm25=True)
+        results = rank(query, bm25=True)
 
     out = dict.fromkeys(results[:5000])
 
