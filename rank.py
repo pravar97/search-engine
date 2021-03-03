@@ -26,7 +26,7 @@ def rank(q, bm25=False):
             begin = t[:3]
             if not begin.isalpha():
                 begin = '000'
-            with open('index/' + begin + '.json') as f:
+            with open('index/t_' + begin + '.json') as f:
 
                 j = json.load(f)[t]
                 index[t] = j.copy()

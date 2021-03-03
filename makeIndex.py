@@ -85,7 +85,7 @@ def main():
 
     for key, v in files.items():
         if v:
-            with open('index/'+key+'.json', 'w') as f:
+            with open('index/t_'+key+'.json', 'w') as f:
                 json.dump(v, f)
 
 
