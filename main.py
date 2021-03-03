@@ -1,4 +1,5 @@
 import json
+from collections import OrderedDict
 
 from rank import rank
 from flask import Flask, render_template, request, jsonify
@@ -31,7 +32,7 @@ def home():
     if query is None:
         results = []
     else:
-        results = rank(query, bm25=True)
+        results = rank(query, bm25=False)
 
     out = dict.fromkeys(results[:5000])
 
@@ -50,9 +51,9 @@ def get_results():
     if query is None:
         results = []
     else:
-        results = rank(query, True)
+        results = rank(query, bm25=False)
 
-    return dict(enumerate(results))
+    return dict(enumerate(results))  # and return top 20 results TODO
 
 @app.route('/results2db', methods=['POST', 'GET'])
 def results2db():
@@ -64,7 +65,8 @@ def results2db():
     else:
         results = list(json.loads(r))
 
-    out = dict.fromkeys(results[:5000])
+    # out = dict.fromkeys(results[:5000]) <- BROKEN does not retain order
+    out = OrderedDict((k, None) for k in results[:5000])
     for a in mongo.db.art.find({'id': {'$in': results[:5000]}}):
         a.pop('_id')
         out[a['id']] = a
@@ -77,6 +79,22 @@ def artist():
     artist = request.args.get('artist')
     out = {}
     for a in mongo.db.art.find({"author": artist}):
+        id = str(a.get('id'))
+        out[id] = a
+        out[id].pop('id')
+
+    return out
+
+
+@app.route('/get_advanced_results', methods=['GET'])
+def get_advanced_results():
+
+    author = request.args.get('author', '').lower()
+    title = request.args.get('title', '').lower()
+    form = request.args.get('form', '').lower()
+
+    out = {}
+    for a in mongo.db.art.find({"form": form}):
         id = str(a.get('id'))
         out[id] = a
         out[id].pop('id')

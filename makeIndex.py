@@ -5,9 +5,10 @@ from nltk import corpus, download
 from unidecode import unidecode
 import string
 import sys
+import os
 
 download('stopwords')
-sw = set(corpus.stopwords.words())
+sw = set(corpus.stopwords.words('english'))
 
 
 def tokenize(text):
@@ -64,6 +65,8 @@ def main():
             docs[id][field2weights[k]] = docs[id].get(field2weights[k], []) + tokens
         i+=100
     n = len(docs)
+    if not os.path.exists('index'):
+        os.makedirs('index')
     with open('index/n.txt', 'w') as f:
         f.write(str(n))
     index, tdl = makeIndex(docs)
@@ -71,6 +74,7 @@ def main():
         f.write(str(tdl/n))
     files = {'000': {}}
     alphabet = list(string.ascii_lowercase)
+
     for a_1 in alphabet + ['']:
         for a_2 in alphabet + ['']:
             for a_3 in alphabet + ['']:
@@ -85,7 +89,9 @@ def main():
 
     for key, v in files.items():
         if v:
-            with open('index/t_'+key+'.json', 'w') as f:
+            if not os.path.exists('index_'+key[0]):
+                os.makedirs('index_'+key[0])
+            with open('index_'+key[0]+'/t_'+key+'.json', 'w') as f:
                 json.dump(v, f)
 
 
