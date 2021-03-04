@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 //import search_icon from '../resources/images/search_icon.png';
 
 const SearchBar = observer(({ onSearch, onChange, query }) => (
-  <div style={{padding: "1em 5em 1em 5em"}}>
+  <div style={{padding: "1em 5em 1em 5em", marginRight:"2em"}}>
   <Form className = "form-custom">
     <Form.Control
      style={{borderRadius: '100px', paddingLeft:'1.2em'}}

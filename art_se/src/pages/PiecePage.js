@@ -1,4 +1,4 @@
-import React, { useState, reaction } from 'react';
+import React, { useState } from 'react';
 import { observer, inject } from 'mobx-react';
 
 import NavigBar from '../components/NavigBar';
@@ -8,7 +8,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Image from 'react-bootstrap/Image';
-import CardColumns from 'react-bootstrap/CardColumns';
+import Masonry from 'react-masonry-css'
 
 import { Ellipsis } from 'react-spinners-css';
 
@@ -26,6 +26,15 @@ const DescriptionText = ({tag, value}) => (
   value != null && <h6> {tag}: <span style = {{color:"Gray"}}> {value}  </span> </h6>
 )
 
+const breakpointColumnsObj = {
+  default: 4,
+  1800: 4,
+  1100: 3,
+  900: 3,
+  600: 2,
+  300: 1
+}
+
 const PiecePage = inject("pieceStore")(
   observer(({ pieceStore, history}) => {
 
@@ -33,7 +42,7 @@ const PiecePage = inject("pieceStore")(
     const piece = pieceStore.selectedPiece
     const [open, setOpen] = useState(false);
     const [query, setQuery] = useState(pieceStore.query);
-    const ind = piece != null ? (piece.description != null ? piece.description.indexOf('.') : -1) : -1
+    const ind = piece != null ? (piece.description != null ? 0.3*piece.description.length : -1) : -1
     //var description = piece.description.substring(0,0.3*piece.description.length) + "...";
     return (
       <div>
@@ -62,14 +71,20 @@ const PiecePage = inject("pieceStore")(
             </Row>
           </Container>
           <ColoredLine color = "LightGrey"/>
-          {pieceArr.length == 0 &&
+          {pieceArr.length === 0 && pieceStore.no_results.length === 0 ?
             <div style={{paddingLeft:"10%"}}>
               <span style={{float:'left'}}>
-                <h6 style={{color:"gray"}}> Retrieving piece </h6>
+                <p style={{color:"Gray"}}> Retrieving piece </p>
               </span>
               <span style={{paddingLeft:".5em"}}>
-                <Ellipsis color = "gray" size = {24}/>
+                <Ellipsis color = "Gray" size = {24}/>
               </span>
+            </div>
+            :
+            <div style={{paddingLeft:"10%"}}>
+              {pieceStore.no_results.length === 1 &&
+                <p style={{color:"Grey"}}> No Results </p>
+              }
             </div>
           }
           {pieceArr.length > 0 &&
@@ -89,11 +104,12 @@ const PiecePage = inject("pieceStore")(
             <Row>
               <Col>
                 <h4 style={{}}> Details </h4>
-                <DescriptionText tag={"Medium"} value={piece.form} />
-                <DescriptionText tag={"Technique"} value={piece.technique} />
+                <DescriptionText tag={"Form"} value={piece.form} />
+                <DescriptionText tag={"Medium"} value={piece.medium} />
+                <DescriptionText tag={"Dimensions"} value={piece.dimensions} />
                 <DescriptionText tag={"Timeframe"} value={piece.timeframe} />
-                <DescriptionText tag={"Location"} value={piece.location} />
                 <DescriptionText tag={"School"} value={piece.school} />
+                <DescriptionText tag={"Repository"} value={piece.repository} />
                 <h6> Source: <span style = {{color:"Gray"}}> <a href={piece.source_url}>{piece.source.toUpperCase()}</a>  </span> </h6>
               </Col>
               {piece.description &&
@@ -101,7 +117,7 @@ const PiecePage = inject("pieceStore")(
                   <h4> About the piece </h4>
                   <p style={{display:"inline"}}>
                     {piece.description.substring(0,ind)
-                      + (open ? piece.description.substring(ind, piece.description.length) : ".")}
+                      + (open ? piece.description.substring(ind, piece.description.length) : "...")}
                   </p>
                   <p
                     onClick={() => setOpen(!open)}
@@ -122,9 +138,12 @@ const PiecePage = inject("pieceStore")(
               }
             </Row>
             {pieceStore.artist_pieces.length > 0 &&
-            <Row style={{ paddingBottom: "1em"}}>
+            <Row style={{ paddingBottom: "1em", paddingTop:"1em"}}>
               <Col style={{paddingTop: "0em"}}>
-                <CardColumns>
+              <Masonry
+                breakpointCols={breakpointColumnsObj}
+                className="my-masonry-grid"
+                columnClassName="my-masonry-grid_column">
                   {pieceStore.artist_pieces.map(piece => {
                       if (piece) {
                         return (
@@ -139,7 +158,7 @@ const PiecePage = inject("pieceStore")(
                      }
                      return null
                   }) }
-                </CardColumns>
+                </Masonry>
               </Col>
             </Row>
             }

@@ -19,7 +19,7 @@ const SearchPage = inject("pieceStore")(
     pieceStore.clear();
     pieceStore.clearQuery();
     return (
-      <div class="hero_image">
+      <div className="hero_image">
         <Container>
           <Row className="text-center">
             <Col class="align-self-center">

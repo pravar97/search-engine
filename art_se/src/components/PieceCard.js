@@ -11,9 +11,9 @@ const PieceList = observer(({ piece, onSelect }) => (
     tag="a"
     onClick={onSelect}
     border="light"
-    style={{ cursor: "pointer", margin: "0.7em 0 0 0"}}
+    style={{ cursor: "pointer", margin: "0.em 0 0 0"}}
     className="mb-2"
-     key= {piece.title}
+     key= {parseInt(piece.id)}
   >
     <Card.Img variant="top" src={piece.image} onError={(e) => {
      e.target.src = placeholder // some replacement image
