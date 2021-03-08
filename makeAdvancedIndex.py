@@ -1,39 +1,46 @@
-import json
 import re
 import pymongo
 from nltk import corpus, download
 from unidecode import unidecode
-import string
-import sys
 import os
+import json
+import string
 
 
 download('stopwords')
 sw = set(corpus.stopwords.words('english'))
 
 
-def makeTrigrams(tokens):
-    trigrams = {}
-
-    for token in tokens:
-        chars = list(token)
-        chars.insert(0, '<s>')
-        chars.insert(0, '<s>')
-        chars.append('</s>')
-        chars.append('</s>')
-
-        for c in range(0, len(chars)-2):
-            trigrams[''.join(chars[c:c+3])] = trigrams.get(''.join(chars[c:c+3]), 0) + 1
-
-    return trigrams
-
-
 def tokenize(text):
     text = unidecode(text)
     text.replace('\'', "")
     text.replace('-', "")
-    text = set(re.findall('[a-z0-9]+', text.lower()))
-    return [t for t in text if t not in sw]
+    return re.findall('[a-z0-9]+', text.lower())
+    # return [t for t in text if t not in sw]
+
+
+def makeIndex(docs):
+    vocab = set()
+    for d in docs:
+        for w in docs[d]:
+            vocab.add(w)
+
+    out = {}  # {term : {DOCNO*: tf, _df: df}}
+    for t in vocab:
+
+        out[t] = {'_df': 0}
+    tdl = 0
+    for d in docs:
+        dl = 0
+        for w in docs[d]:
+            dl += len(w)
+            if d in out[w]:
+                out[w][d][0] += 1
+            else:
+                out[w][d] = [1, dl]
+                out[w]['_df'] += 1
+        tdl += dl
+    return out, tdl
 
 
 def main(field):
@@ -46,19 +53,43 @@ def main(field):
     for a in mydb.art.find(projection={'id': True, field: True}):
         a.pop('_id')
         id = a.pop('id')
-        docs[id] = {}
+        docs[id] = {}  # {id: }
+        v = a.get(field)
+        tokens = tokenize(str(v))
 
-        for k, v in a.items():
-            tokens = tokenize(str(v))
-            trigrams = makeTrigrams(tokens)
-            docs[id] = trigrams
+        docs[id] = tokens
 
     n = len(docs)
-    if not os.path.exists('artist_index'):
-        os.makedirs('artist_index')
-    with open('artist_index/n.txt', 'w') as f:
+    if not os.path.exists(f'{field}_index'):
+        os.makedirs(f'{field}_index')
+    with open(f'{field}_index/n.txt', 'w') as f:
         f.write(str(n))
+
+    index, tdl = makeIndex(docs)
+    with open(f'{field}_index/adl.txt', 'w') as f:
+        f.write(str(tdl / n))
+
+    files = {'00': {}}
+    alphabet = list(string.ascii_lowercase)
+
+    for a_1 in alphabet + ['']:
+        for a_2 in alphabet + ['']:
+            files[a_1+a_2] = {}
+
+    for i, v in index.items():
+        begin = i[:2]
+        if not begin.isalpha():
+            begin = '00'
+
+        files[begin].update({i: v})
+    if not os.path.exists(f'{field}_index/'):
+        os.makedirs(f'{field}_index/')
+    for key, v in files.items():
+        if v:
+            with open(f'{field}_index/t_'+key+'.json', 'w') as f:
+                json.dump(v, f)
 
 
 if __name__ == '__main__':
-    main()
+    for field in ['author', 'title']:
+        main(field)

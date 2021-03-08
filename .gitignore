@@ -2,4 +2,6 @@ art_se/node_modules
 venv
 .idea\
 index*
+author_index
+title_index
 __pycache__

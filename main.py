@@ -1,10 +1,6 @@
 import json
-
-from rank import rank
+from rank import rank, advanced_rank
 from flask import Flask, render_template, request, jsonify
-
-
-
 from flask_pymongo import PyMongo, ObjectId
 from flask_cors import CORS
 from collections import OrderedDict
@@ -24,6 +20,7 @@ Columns: _id, author, birth_year, birth_place, death_year, death_place, descript
 Table: artworks
 Columns: _id,
 '''
+
 
 @app.route('/result', methods=['POST', 'GET'])
 def home():
@@ -54,8 +51,8 @@ def get_results():
     else:
         results = rank(query, True)
 
-
     return dict(enumerate(results))
+
 
 @app.route('/results2db', methods=['POST', 'GET'])
 def results2db():
@@ -87,6 +84,27 @@ def artist():
 
     return out
 
+@app.route('/get_advanced_results', methods=['GET'])
+def get_advanced_results():
+
+    author = request.args.get('author', '').lower()
+    title = request.args.get('title', '').lower()
+    form = request.args.get('form', '').lower()
+
+    out = {}
+    results = advanced_rank(author, title, bm25=False)
+    print(results)
+    out = dict.fromkeys(results[:5000])
+
+    query = {'id': {'$in': results[:5000]}}
+    if form:
+        query["form"]: form
+
+    for a in mongo.db.art.find(query):
+        a.pop('_id')
+        out[a['id']] = a
+
+    return out
 
 if __name__ == '__main__':
     app.run(debug=True)
