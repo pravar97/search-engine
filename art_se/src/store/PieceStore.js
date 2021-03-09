@@ -174,7 +174,7 @@ class PieceStore {
       })
       .then(json => {
         console.log(json)
-        if (json[null] !== null){
+        if (json[0] !== null){
           this.addSelectedPiece(json);
           this.pieceArr.push("0")
         }
@@ -211,6 +211,42 @@ class PieceStore {
         return response.json()
       })
       .then(json => this.addPieces(json, this.artist_pieces))
+  }
+
+  @action advancedSearch(title, artist, form) {
+    console.log("Doing advanced pieces")
+    console.log(form)
+    const time =  performance.now();
+    this.doAdvancedSearch(title, artist, form);
+    this.timeTaken =  performance.now() - time;
+  }
+
+  @action doAdvancedSearch(title, artist, form) {
+    console.log("making request for advanced search")
+    var advanced_query = ""
+    if(title !== ""){
+      advanced_query += ("?title=" + title)
+    }
+    if(artist !== ""){
+      advanced_query += ("?author=" + artist)
+    }
+    if(form !== ""){
+      advanced_query += ("?form=" + form)
+    }
+    fetch('/get_advanced_results' + advanced_query)
+    .then(response => {
+      console.log(response)
+      return response.json()
+    })
+    .then(json => {
+      const ids = Object.values(json)
+      console.log(json)
+      const sliced_ids = ids.slice(this.scroll_ind,this.scroll_ind+20)
+      this.scroll_ind = this.scroll_ind + 20;
+      this.ids = ids;
+      console.log(ids)
+      this.getPieces(sliced_ids)
+    })
   }
 
   @action addSelectedPiece(json) {

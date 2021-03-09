@@ -83,7 +83,12 @@ const PiecePage = inject("pieceStore")(
             :
             <div style={{paddingLeft:"10%"}}>
               {pieceStore.no_results.length === 1 &&
-                <p style={{color:"Grey"}}> No Results </p>
+                <div style= {{paddingTop:"1em", paddingLeft:"4em",
+                alignItems: 'center',
+                justifyContent: 'center'}}>
+                  <h2 style={{color:"Grey"}}> Art you sure about that? </h2>
+                  <p style={{color:"Grey"}}> Your query - <b>{query}</b> - did not return any results. <br/> Maybe try again using a different query. </p>
+                </div>
               }
             </div>
           }

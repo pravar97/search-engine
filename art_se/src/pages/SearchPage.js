@@ -12,9 +12,22 @@ import Form from 'react-bootstrap/Form';
 
 import logo from '../resources/images/logo.png';
 
+const ColoredLine = ({ color }) => (
+    <hr fluid="true"
+        style={{
+            color: color,
+            backgroundColor: color,
+            height: 0.01
+        }}
+    />
+);
+
 const SearchPage = inject("pieceStore")(
   observer(({ pieceStore, history }) => {
     const [query, setQuery] = useState("");
+    const [advTitle, setAdvTitle] = useState("");
+    const [advArtist, setAdvArtist] = useState("");
+    const [advForm, setAdvForm] = useState("");
     const [open, setOpen] = useState(false);
     pieceStore.clear();
     pieceStore.clearQuery();
@@ -36,7 +49,7 @@ const SearchPage = inject("pieceStore")(
             </Col>
           </Row>
           <Row>
-            <Col>
+            <Col style={{margin: "0 2em 0 2em"}}>
               <SearchBar
                onChange={e => setQuery(e.target.value)}
                query = {query}
@@ -93,19 +106,54 @@ const SearchPage = inject("pieceStore")(
                 Advanced Search
               </p>
               <Collapse in={open}>
-              <Form style = {{paddingLeft:"20%", paddingRight:"20%"}} >
-                <Form.Row>
-                  <Form.Group as={Col} controlId="formGridEmail" >
-                    <Form.Label>Title</Form.Label>
-                    <Form.Control type="email" placeholder="Enter title" />
-                  </Form.Group>
+                <div>
+                  <Form style = {{paddingLeft:"20%", paddingRight:"20%"}} >
+                    <Form.Row>
+                      <Form.Group
+                        style = {{borderRadius: '170px'}}
+                        as={Col}
+                        onChange={e => setAdvTitle(e.target.value)}
+                      >
+                        <Form.Label>Title</Form.Label>
+                        <Form.Control placeholder="Enter title" />
+                      </Form.Group>
 
-                  <Form.Group as={Col} controlId="formGridPassword">
-                    <Form.Label>Artist</Form.Label>
-                    <Form.Control type="password" placeholder="Enter artist" />
-                  </Form.Group>
-                </Form.Row>
-                </Form>
+                      <Form.Group
+                        as={Col} controlId="formGridArtist"
+                        onChange={e => setAdvArtist(e.target.value)}
+                      >
+                        <Form.Label>Artist</Form.Label>
+                        <Form.Control placeholder="Enter artist" />
+                      </Form.Group>
+                      <Form.Group
+                        as={Col}
+                        style = {{backgroundColor: "#FFFFFF", borderRadius: '7px', color: "black", borderColor:"lightgrey"}}
+                        onChange={e => setAdvForm(e.target.value.toLowerCase())}
+                      >
+                        <Form.Label>Form</Form.Label>
+                        <Form.Control as="select" defaultValue="Choose...">
+                          <option>Choose... </option>
+                          <option>Painting</option>
+                          <option>Architecture</option>
+                          <option>Sculpture</option>
+                          <option>Graphics</option>
+                        </Form.Control>
+                      </Form.Group>
+                    </Form.Row>
+                  </Form>
+                  <button
+                    onClick={() => {if (advTitle !== "" || advArtist !== ""){
+                      pieceStore.advancedSearch(advTitle, advArtist, advForm);
+                      history.push("/result");
+                    }
+                    }}
+                    className="btn btn-outline-primary"
+                    type="button"
+                    style = {{backgroundColor: "#E8E8E8", color: "black", borderColor:"white", height:"2.2em"}}
+                  >
+                    Advanced Search
+                  </button>
+                </div>
               </Collapse>
             </Col>
           </Row>

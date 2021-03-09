@@ -104,7 +104,7 @@ def get_advanced_results():
         a.pop('_id')
         out[a['id']] = a
 
-    return out
+    return dict(enumerate(out))
 
 if __name__ == '__main__':
     app.run(debug=True)
