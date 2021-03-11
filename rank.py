@@ -55,9 +55,10 @@ def rank(q, bm25=False):
 
         sum[d] = round(csum, 4)
 
-    sorted_sum = sorted(sum, key=sum.get, reverse=True)
+    list_sum = [(k, v) for k, v in sum.items()]
+    sorted_sum = sorted(list_sum, key=lambda x: (x[1], x[0]), reverse=True)
 
-    return sorted_sum
+    return [k for k, v in sorted_sum]
 
 
 def field_rank(field, q, bm25=False):
