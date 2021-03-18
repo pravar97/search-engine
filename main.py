@@ -91,20 +91,21 @@ def get_advanced_results():
     title = request.args.get('title', '').lower()
     form = request.args.get('form', '').lower()
 
-    out = {}
+
     results = advanced_rank(author, title, bm25=False)
-    print(results)
-    out = dict.fromkeys(results[:5000])
-
-    query = {'id': {'$in': results[:5000]}}
-    if form:
-        query["form"]: form
-
-    for a in mongo.db.art.find(query):
-        a.pop('_id')
-        out[a['id']] = a
-
-    return dict(enumerate(out))
+    # print(results)
+    # out = dict.fromkeys(results[:5000])
+    #
+    # query = {'id': {'$in': results[:5000]}}
+    # if form:
+    #     query["form"]: form
+    #
+    # for a in mongo.db.art.find(query):
+    #     a.pop('_id')
+    #     out[a['id']] = a
+    #
+    # # return out
+    return dict(enumerate(results))
 
 if __name__ == '__main__':
     app.run(debug=True)
