@@ -59,16 +59,18 @@ def evaluate_metric_2():
     total = 0
     for key, query in zip(df['ID'].tolist(), df['Title'].tolist()):
         query = tokenize(query)
-        l = len(query)
+        l = min(len(query), 3)
         perms = []
-        for i in range(1, 5):
-            ret = list(permutations(query, i))
-            for j in ret:
-                perms.append(list(j))
+        ret = list(permutations(query, l))
+        for j in ret:
+            perms.append(list(j))
         bestRank = 99999
 
-        perms = [query]
+        l = len(perms)
+        i = 0
         for perm in perms:
+            print('\r' + str(i) + '/' + str(l))
+            i += 1
             perm_str = ' '.join(perm)
             results = rank(perm_str)
             try:
