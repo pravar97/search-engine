@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c5f0356d-1485-4ad0-a3c5-a5bd5d821527" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/TTDS-Art-Search.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/TTDS-Art-Search.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-    </list>
+    <list default="true" id="c5f0356d-1485-4ad0-a3c5-a5bd5d821527" name="Default Changelist" comment="" />
     <list id="7e24ef5a-a033-48c7-ad46-1b2cd666972b" name="Changes by vasnt" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
