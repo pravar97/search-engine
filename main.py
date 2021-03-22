@@ -92,16 +92,20 @@ def get_advanced_results():
     form = request.args.get('form', '').lower()
 
     results = advanced_rank(author, title, bm25=False)
-    if not form:
+    if not form and results is not None:
         return dict(enumerate(results))
     # print(results)
-    out = dict.fromkeys(results[:5000])
 
-    query = {'id': {'$in': results[:5000]}}
+    if results is None:
+        query = {}
+        out = {}
+    else:
+        query = {'id': {'$in': results[:5000]}}
+        out = dict.fromkeys(results[:5000])
 
     query["form"]: form
 
-    for a in mongo.db.art.find(query):
+    for a in mongo.db.art.find(query).limit(5001):
         a.pop('_id')
         out[a['id']] = a
 

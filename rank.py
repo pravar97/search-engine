@@ -111,23 +111,20 @@ def field_rank(field, q, bm25=False):
 
 
 def advanced_rank(author, title, bm25=False):
-    fr = None
-    if author:
-        fr_author = field_rank('author', author, bm25)
-    if title:
-        fr_title = field_rank('title', title, bm25)
 
     if author and title:
-        # fr = {}
-        fr = fr_author
+        fr_author = field_rank('author', author, bm25)
+        fr_title = field_rank('title', title, bm25)
+        fr = {}
         for key, amount in fr_title.items():
-            fr[key] = fr_author.get(key, 0) + amount
+            if key in fr_author:
+                fr[key] = fr_author.get(key) + amount
             # if key in fr_author:
             #     fr[key] = fr_author.get(key) * amount
     elif author:
-        fr = fr_author
+        fr = field_rank('author', author, bm25)
     elif title:
-        fr = fr_title
+        fr = field_rank('title', title, bm25)
     else:
         return None
 
