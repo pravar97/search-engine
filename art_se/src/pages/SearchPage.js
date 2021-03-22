@@ -119,7 +119,7 @@ const SearchPage = inject("pieceStore")(
                       </Form.Group>
 
                       <Form.Group
-                        as={Col} controlId="formGridArtist"
+                        as={Col}
                         onChange={e => setAdvArtist(e.target.value)}
                       >
                         <Form.Label>Artist</Form.Label>

@@ -228,10 +228,16 @@ class PieceStore {
       advanced_query += ("?title=" + title)
     }
     if(artist !== ""){
-      advanced_query += ("?author=" + artist)
+      if (advanced_query.length > 0) {
+        advanced_query += "&"
+      }
+      else {
+        advanced_query += "?"
+      }
+      advanced_query += ("author=" + artist)
     }
     if(form !== ""){
-      advanced_query += ("?form=" + form)
+      advanced_query += ("&form=" + form)
     }
     fetch('https://ttds-group-1-project.nw.r.appspot.com/get_advanced_results' + advanced_query)
     .then(response => {

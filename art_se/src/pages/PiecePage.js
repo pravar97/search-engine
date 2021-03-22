@@ -8,6 +8,8 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Image from 'react-bootstrap/Image';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
 import Masonry from 'react-masonry-css'
 
 import { Ellipsis } from 'react-spinners-css';
@@ -116,6 +118,7 @@ const PiecePage = inject("pieceStore")(
                 <DescriptionText tag={"School"} value={piece.school} />
                 <DescriptionText tag={"Repository"} value={piece.repository} />
                 <h6> Source: <span style = {{color:"Gray"}}> <a href={piece.source_url}>{piece.source.toUpperCase()}</a>  </span> </h6>
+
               </Col>
               {piece.description &&
                 <Col>

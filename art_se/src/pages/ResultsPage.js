@@ -53,7 +53,7 @@ const ResultsPage = inject("pieceStore")(
               />
             </Col>
             <Col xs={10}>
-              <div style={{padding: "1em 5em 1em 5em", marginRight:"2em"}}>
+              <div style={{padding: "1em 10em 1em 10em", marginRight:"2em"}}>
                 <Form className = "form-custom">
                   <Form.Control
                    style={{borderRadius: '100px', paddingLeft:'1.2em'}}
