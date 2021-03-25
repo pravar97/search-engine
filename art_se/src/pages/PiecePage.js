@@ -97,7 +97,7 @@ const PiecePage = inject("pieceStore")(
           {pieceArr.length > 0 &&
           <Container style={{paddingTop: "0.7em", paddingLeft: "5%", paddingRight: "5%"}}>
             <Row className="justify-content-center">
-              <Image src={piece.image} height="400em"/>
+              <Image src={piece.image} height="300em"/>
             </Row>
             <Row style={{padding: "2em 0 0.6em 0"}}>
               <Col>
