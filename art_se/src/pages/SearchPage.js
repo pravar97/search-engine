@@ -45,7 +45,7 @@ const SearchPage = inject("pieceStore")(
           </Row>
           <Row className="text-center" style = {{paddingTop: '1em'}}>
             <Col>
-              <h2> artse </h2>
+              <h2> Artse </h2>
             </Col>
           </Row>
           <Row>
