@@ -45,7 +45,7 @@ const SearchPage = inject("pieceStore")(
           </Row>
           <Row className="text-center" style = {{paddingTop: '1em'}}>
             <Col>
-              <h2> Artse </h2>
+              <h2> ArtSE </h2>
             </Col>
           </Row>
           <Row>
@@ -89,7 +89,7 @@ const SearchPage = inject("pieceStore")(
                 type="button"
                 style = {{backgroundColor: "#E8E8E8", color: "black", borderColor:"white", width:"9em", height:"2.2em", marginLeft:"2em"}}
               >
-              I'm feelin artse
+              I'm feelin ArtSE
               </button>
             </Col>
           </Row>
