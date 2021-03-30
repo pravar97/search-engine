@@ -149,7 +149,7 @@ const ResultsPage = inject("pieceStore")(
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        {pieces.length !== 0 && pieces.length !== pieceStore.ids.length &&
+        {pieces.length !== 0 && pieces.length !== pieceStore.ids.length && pieceStore.similar.length === 0 &&
           <Ring color = "gray" size = {35} style={{marginBottom:"2em"}}/>
         }
         </div>
