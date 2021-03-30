@@ -110,10 +110,12 @@ def get_advanced_results():
         out[a['id']] = a
 
     json_out = {}
-    for i, (k, v) in enumerate(out.items()):
+    i = 0
+    for k, v in out.items():
         if v is None:
             continue
         json_out[i] = k
+        i += 1
     return json_out
 
 
