@@ -148,7 +148,7 @@ class PieceStore {
 
   @action searchPiece() {
     console.log("making request for ids")
-    fetch('https://react-app-dot-ttds-group-project.ew.r.appspot.com/get_results?q=' + this.query)
+    fetch('https://ttds-group-project.ew.r.appspot.com/get_results?q=' + this.query)
       .then(response => {
         console.log(response)
         return response.json()
@@ -166,7 +166,7 @@ class PieceStore {
 
   @action searchMorePiece(id) {
     console.log("making request for more like this piece")
-    fetch('https://react-app-dot-ttds-group-project.ew.r.appspot.com/get_k_nearest?id=' + id)
+    fetch('https://ttds-group-project.ew.r.appspot.com/get_k_nearest?id=' + id)
       .then(response => {
         console.log(response)
         return response.json()
@@ -179,7 +179,7 @@ class PieceStore {
   @action feelingArtsy() {
     this.lucky = true
     console.log("making request for ids")
-    fetch('https://react-app-dot-ttds-group-project.ew.r.appspot.com/get_results?q=' + this.query)
+    fetch('https://ttds-group-project.ew.r.appspot.com/get_results?q=' + this.query)
       .then(response => {
         console.log(response)
         return response.json()
@@ -193,7 +193,7 @@ class PieceStore {
 
   @action getLuckyPiece(piece_id){
     console.log("making request for lucky piece")
-    fetch('https://react-app-dot-ttds-group-project.ew.r.appspot.com/results2db?r=' + JSON.stringify(piece_id))
+    fetch('https://ttds-group-project.ew.r.appspot.com/results2db?r=' + JSON.stringify(piece_id))
       .then(response => {
         console.log(response)
         return response.json()
@@ -219,7 +219,7 @@ class PieceStore {
 
   @action getPieces(ids) {
     console.log("making request for pieces")
-    fetch('https://react-app-dot-ttds-group-project.ew.r.appspot.com/results2db?r=' + JSON.stringify(ids))
+    fetch('https://ttds-group-project.ew.r.appspot.com/results2db?r=' + JSON.stringify(ids))
       .then(response => {
         console.log(response)
         return response.json()
@@ -231,7 +231,7 @@ class PieceStore {
 
   @action getArtistPieces(artist) {
     console.log("making request for artist pieces")
-    fetch('https://react-app-dot-ttds-group-project.ew.r.appspot.com/artist?artist=' + artist)
+    fetch('https://ttds-group-project.ew.r.appspot.com/artist?artist=' + artist)
       .then(response => {
         console.log(response)
         return response.json()
@@ -265,7 +265,7 @@ class PieceStore {
     if(form !== ""){
       advanced_query += ("&form=" + form)
     }
-    fetch('https://react-app-dot-ttds-group-project.ew.r.appspot.com/get_advanced_results' + advanced_query)
+    fetch('https://ttds-group-project.ew.r.appspot.com/get_advanced_results' + advanced_query)
     .then(response => {
       console.log(response)
       return response.json()
