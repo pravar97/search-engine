@@ -118,7 +118,7 @@ def get_k_nearest():
     results = []
     for a in mongo.db.art.find({'id': id}):
         if 'most_similar' in a:
-            results = [str(int(x)) for x in a['most_similar']]
+            results = list(set([str(int(x)) for x in a['most_similar'] if x is not None]))
             break
     print(results)
     keys = results[:5000]
