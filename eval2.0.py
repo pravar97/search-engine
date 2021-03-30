@@ -4,7 +4,7 @@ import pandas as pd
 from unidecode import unidecode
 import re
 from nltk import corpus, download
-from itertools import permutations
+from itertools import permutations, combinations
 from collections import OrderedDict
 import random
 
@@ -59,9 +59,9 @@ def evaluate_metric_2():
     total = 0
     for key, query in zip(df['ID'].tolist(), df['Title'].tolist()):
         query = tokenize(query)
-        l = min(len(query), 3)
+        l = min(len(query), 4)
         perms = []
-        ret = list(permutations(query, l))
+        ret = list(combinations(query, l))
         for j in ret:
             perms.append(list(j))
         bestRank = 99999
@@ -78,6 +78,8 @@ def evaluate_metric_2():
             except:
                 ran = 99999
             bestRank = min(bestRank, ran)
+            if bestRank < 40:
+                break
 
         ranks[key] = ranks.get(key, []) + [bestRank]
         if bestRank < 40:

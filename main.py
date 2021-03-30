@@ -49,7 +49,7 @@ def get_results():
     if query is None:
         results = []
     else:
-        results = rank(query, True)
+        results = rank(query, False)
 
     return dict(enumerate(results))
 
