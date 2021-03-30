@@ -109,8 +109,13 @@ def get_advanced_results():
         a.pop('_id')
         out[a['id']] = a
 
-    # return out
-    return dict(enumerate(out))
+    json_out = {}
+    for i, (k, v) in enumerate(out.items()):
+        if v is None:
+            continue
+        json_out[i] = k
+    return json_out
+
 
 @app.route('/get_k_nearest', methods=['GET'])
 def get_k_nearest():
