@@ -80,7 +80,6 @@ def artist():
         a.pop('_id')
         id = str(a.get('id'))
         out[id] = a
-        out[id].pop('id')
 
     return out
 

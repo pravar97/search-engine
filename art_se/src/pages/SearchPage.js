@@ -45,7 +45,7 @@ const SearchPage = inject("pieceStore")(
           </Row>
           <Row className="text-center" style = {{paddingTop: '1em'}}>
             <Col>
-              <h2> art.se </h2>
+              <h2> artse </h2>
             </Col>
           </Row>
           <Row>
@@ -89,7 +89,7 @@ const SearchPage = inject("pieceStore")(
                 type="button"
                 style = {{backgroundColor: "#E8E8E8", color: "black", borderColor:"white", width:"9em", height:"2.2em", marginLeft:"2em"}}
               >
-              I'm feelin artsy
+              I'm feelin artse
               </button>
             </Col>
           </Row>
@@ -128,11 +128,18 @@ const SearchPage = inject("pieceStore")(
                       <Form.Group
                         as={Col}
                         style = {{backgroundColor: "#FFFFFF", borderRadius: '7px', color: "black", borderColor:"lightgrey"}}
-                        onChange={e => setAdvForm(e.target.value.toLowerCase())}
+                        onChange={e => {
+                          if (e.target.value == "None") {
+                            setAdvForm("")
+                          }
+                          else {
+                            setAdvForm(e.target.value.toLowerCase())
+                          }
+                        }}
                       >
                         <Form.Label>Form</Form.Label>
                         <Form.Control as="select" defaultValue="Choose...">
-                          <option>Choose... </option>
+                          <option>None</option>
                           <option>Painting</option>
                           <option>Architecture</option>
                           <option>Sculpture</option>
@@ -142,11 +149,13 @@ const SearchPage = inject("pieceStore")(
                     </Form.Row>
                   </Form>
                   <button
-                    onClick={() => {if (advTitle !== "" || advArtist !== ""){
+                    onClick={() => {if (advTitle !== "" || advArtist !== "" || advForm !== ""){
+
+                      console.log(advForm)
                       pieceStore.advancedSearch(advTitle, advArtist, advForm);
                       history.push("/result");
                     }
-                    }}
+                  }}
                     className="btn btn-outline-primary"
                     type="button"
                     style = {{backgroundColor: "#E8E8E8", color: "black", borderColor:"white", height:"2.2em"}}

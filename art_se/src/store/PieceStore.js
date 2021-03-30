@@ -1,6 +1,8 @@
 import { observable, action, makeAutoObservable } from "mobx";
 import { persistence, StorageAdapter } from 'mobx-persist-store';
 
+//https://ttds-group-project.ew.r.appspot.com
+
 String.prototype.toProperCase = function () {
   return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 };
@@ -28,8 +30,9 @@ export class Piece {
   @observable source_url
   @observable repository
   @observable dimensions
+  @observable id
 
-  constructor (author,title,date,medium,description,form,school, image, source, source_url, repository, dimensions) {
+  constructor (author,title,date,medium,description,form,school, image, source, source_url, repository, dimensions, id) {
     this.author = printText(author.split(',')[1]) + " " + printText(author.split(',')[0].toProperCase());
     this.author_no_format = author;
     this.title = title;
@@ -43,6 +46,7 @@ export class Piece {
     this.source_url = source_url;
     this.repository = repository;
     this.dimensions = dimensions;
+    this.id = id;
   }
 }
 
@@ -76,7 +80,9 @@ class PieceStore {
   @observable query = "";
   @observable timeTaken = 0;
   @observable lucky = false;
-  @observable no_results = false;
+  @observable no_results = observable.array();
+  @observable no_similar = observable.array();
+  @observable similar = observable.array();
 
   @action setQuery(query) {
     this.query = query;
@@ -91,7 +97,6 @@ class PieceStore {
     this.artist_pieces = observable.array();
   }
 
-
   @action clear() {
     console.log("Clearing pieces")
     this.pieces = observable.array();
@@ -103,6 +108,8 @@ class PieceStore {
     this.ids = observable.array();
     this.lucky = false;
     this.no_results =  observable.array();
+    this.no_similar = observable.array();
+    this.similar = observable.array();
   }
 
   @action selectPiece(piece) {
@@ -122,6 +129,13 @@ class PieceStore {
     }
   }
 
+  @action moreLikeThis(id) {
+    console.log("Showing more like this")
+    const time =  performance.now();
+    this.searchMorePiece(id);
+    this.timeTaken =  performance.now() - time;
+  }
+
   @action searchPiecesWithQuery(e, query) {
     console.log("Searching pieces")
     this.query = query
@@ -134,7 +148,7 @@ class PieceStore {
 
   @action searchPiece() {
     console.log("making request for ids")
-    fetch('https://ttds-group-project.ew.r.appspot.com/get_results?q=' + this.query)
+    fetch('https://react-app-dot-ttds-group-project.ew.r.appspot.com/get_results?q=' + this.query)
       .then(response => {
         console.log(response)
         return response.json()
@@ -150,10 +164,22 @@ class PieceStore {
       })
   }
 
+  @action searchMorePiece(id) {
+    console.log("making request for more like this piece")
+    fetch('https://react-app-dot-ttds-group-project.ew.r.appspot.com/get_k_nearest?id=' + id)
+      .then(response => {
+        console.log(response)
+        return response.json()
+      })
+      .then(json => {
+        this.addMorePieces(json, this.pieces)
+      })
+  }
+
   @action feelingArtsy() {
     this.lucky = true
     console.log("making request for ids")
-    fetch('https://ttds-group-project.ew.r.appspot.com/get_results?q=' + this.query)
+    fetch('https://react-app-dot-ttds-group-project.ew.r.appspot.com/get_results?q=' + this.query)
       .then(response => {
         console.log(response)
         return response.json()
@@ -167,7 +193,7 @@ class PieceStore {
 
   @action getLuckyPiece(piece_id){
     console.log("making request for lucky piece")
-    fetch('https://ttds-group-project.ew.r.appspot.com/results2db?r=' + JSON.stringify(piece_id))
+    fetch('https://react-app-dot-ttds-group-project.ew.r.appspot.com/results2db?r=' + JSON.stringify(piece_id))
       .then(response => {
         console.log(response)
         return response.json()
@@ -193,7 +219,7 @@ class PieceStore {
 
   @action getPieces(ids) {
     console.log("making request for pieces")
-    fetch('https://ttds-group-project.ew.r.appspot.com/results2db?r=' + JSON.stringify(ids))
+    fetch('https://react-app-dot-ttds-group-project.ew.r.appspot.com/results2db?r=' + JSON.stringify(ids))
       .then(response => {
         console.log(response)
         return response.json()
@@ -205,7 +231,7 @@ class PieceStore {
 
   @action getArtistPieces(artist) {
     console.log("making request for artist pieces")
-    fetch('https://ttds-group-project.ew.r.appspot.com/artist?artist=' + artist)
+    fetch('https://react-app-dot-ttds-group-project.ew.r.appspot.com/artist?artist=' + artist)
       .then(response => {
         console.log(response)
         return response.json()
@@ -239,7 +265,7 @@ class PieceStore {
     if(form !== ""){
       advanced_query += ("&form=" + form)
     }
-    fetch('https://ttds-group-project.ew.r.appspot.com/get_advanced_results' + advanced_query)
+    fetch('https://react-app-dot-ttds-group-project.ew.r.appspot.com/get_advanced_results' + advanced_query)
     .then(response => {
       console.log(response)
       return response.json()
@@ -272,7 +298,8 @@ class PieceStore {
         piece.source,
         piece.source_url,
         piece.repository,
-        piece.dimensions
+        piece.dimensions,
+        piece.id
       ))
     });
     this.selectedPiece = pieces[0];
@@ -296,11 +323,41 @@ class PieceStore {
         piece.source,
         piece.source_url,
         piece.repository,
-        piece.dimensions
+        piece.dimensions,
+        piece.id
       ))
     });
     if (pieces.length === 0 && this.pieces.length === 0) {
       this.no_results.push("1")
+    }
+    array.replace(array.concat(pieces))
+
+  }
+
+  @action addMorePieces(json,array) {
+    console.log("Adding more like this pieces")
+    const pieces = [];
+    console.log(json)
+    Object.values(json).forEach((piece) => {
+      pieces.push(new Piece(
+        piece.author,
+        piece.title,
+        piece.date,
+        piece.medium,
+        piece.description,
+        piece.form,
+        piece.school,
+        piece.image_url,
+        piece.source,
+        piece.source_url,
+        piece.repository,
+        piece.dimensions,
+        piece.id
+      ))
+    });
+    if (pieces.length === 0 && this.pieces.length === 0) {
+      this.no_similar.push("1")
+      console.log("HERE")
     }
     array.replace(array.concat(pieces))
 
@@ -313,7 +370,7 @@ class PieceStore {
 
 export default persistence({
   name: 'PieceStore',
-  properties: ['pieces', 'selectedPiece', 'artist_pieces', 'pieceArr', 'ids', 'query', 'timeTaken', 'lucky', 'no_results'],
+  properties: ['pieces', 'selectedPiece', 'artist_pieces', 'pieceArr', 'ids', 'query', 'timeTaken', 'lucky', 'no_results', 'no_similar', 'similar'],
   adapter: new StorageAdapter({
     read: readStore,
     write: writeStore,
