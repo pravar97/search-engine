@@ -97,7 +97,7 @@ const PiecePage = inject("pieceStore")(
           {pieceArr.length > 0 &&
           <Container style={{paddingTop: "0.7em", paddingLeft: "5%", paddingRight: "5%"}}>
             <Row className="justify-content-center">
-              <Image src={piece.image} height="400em"/>
+              <Image src={piece.image} height="300em"/>
             </Row>
             <Row style={{padding: "2em 0 0.6em 0"}}>
               <Col>
@@ -118,7 +118,21 @@ const PiecePage = inject("pieceStore")(
                 <DescriptionText tag={"School"} value={piece.school} />
                 <DescriptionText tag={"Repository"} value={piece.repository} />
                 <h6> Source: <span style = {{color:"Gray"}}> <a href={piece.source_url}>{piece.source.toUpperCase()}</a>  </span> </h6>
-
+                <button
+                  className="btn btn-outline-primary"
+                  type="button"
+                  onClick={() => {
+                     pieceStore.clear();
+                     pieceStore.clearQuery();
+                     pieceStore.similar.push("1");
+                     pieceStore.moreLikeThis(piece.id);
+                     history.push("/result");
+                   }
+                  }
+                  style = {{backgroundColor: "#E8E8E8", color: "black", borderColor:"white", width:"9em", height:"2.2em", marginTop:"0.6em"}}
+                >
+                More like this
+                </button>
               </Col>
               {piece.description &&
                 <Col>

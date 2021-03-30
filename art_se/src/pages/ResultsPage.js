@@ -38,6 +38,7 @@ const ResultsPage = inject("pieceStore")(
   observer(({ pieceStore, history}) => {
     const [query, setQuery] = useState(pieceStore.query);
     const pieces = pieceStore.pieces;
+    const init_query = pieceStore.query;
     pieceStore.clearSelectedPiece();
     return (
       <div>
@@ -82,7 +83,7 @@ const ResultsPage = inject("pieceStore")(
         <Container fluid style={{padding: "0 10% 0em 10%"}}>
           <Row>
             <Col>
-              {pieces.length === 0 && pieceStore.no_results.length === 0 ?
+              {pieces.length === 0 && pieceStore.no_results.length === 0 && pieceStore.no_similar.length == 0?
                 <div>
                   <span style={{float:'left'}}>
                     <p style={{color:"Gray"}}> Retrieving results </p>
@@ -92,15 +93,28 @@ const ResultsPage = inject("pieceStore")(
                   </span>
                 </div>:
                 <div>
-                  {pieceStore.no_results.length === 0 ?
-                    <p style={{color:"Grey"}}> Retrieved {pieceStore.ids.length} results in {(pieceStore.timeTaken+"").substring(0, 4)} seconds</p>
-                    :<div style= {{paddingTop:"1em", paddingLeft:"4em",
-                    alignItems: 'center',
-                    justifyContent: 'center'}}>
-                      <h2 style={{color:"Grey"}}> Art you sure about that? </h2>
-                      <p style={{color:"Grey"}}> Your query - <b>{query}</b> - did not return any results. <br/> Maybe try again using a different query. </p>
-                    </div>
-                  }
+                  {pieceStore.similar.length == 0 ?
+                    <div>
+                      {pieceStore.no_results.length === 0 ?
+                        <p style={{color:"Grey"}}> Retrieved {pieceStore.ids.length} results in {(pieceStore.timeTaken+"").substring(0, 4)} seconds</p>
+                        :<div style= {{paddingTop:"1em", paddingLeft:"4em",
+                        alignItems: 'center',
+                        justifyContent: 'center'}}>
+                          <h2 style={{color:"Grey"}}> Art you sure about that? </h2>
+                          <p style={{color:"Grey"}}> Your query - <b>{init_query}</b> - did not return any results. <br/> Maybe try again using a different query. </p>
+                        </div>
+                      }
+                    </div> :
+                    <div>
+                      {pieceStore.no_similar.length === 1 &&
+                        <div style= {{paddingTop:"1em", paddingLeft:"4em",
+                        alignItems: 'center',
+                        justifyContent: 'center'}}>
+                          <h2 style={{color:"Grey"}}> Sorry, there are no similar works for this piece! </h2>
+                            <p style={{color:"Grey"}}> It seems there are no similar works to show for this piece but feel free to keep exploring other works! </p>
+                        </div>
+                      }
+                    </div>}
                 </div>
                 }
             </Col>
@@ -136,10 +150,12 @@ const ResultsPage = inject("pieceStore")(
           justifyContent: 'center',
         }}>
         {pieces.length !== 0 && pieces.length !== pieceStore.ids.length &&
-          <Ring color = "gray" size = {35}/>
+          <Ring color = "gray" size = {35} style={{marginBottom:"2em"}}/>
         }
         </div>
-        <BottomScrollListener onBottom={() => pieceStore.loadMore()} />;
+        {pieceStore.similar.length === 0 &&
+          <BottomScrollListener onBottom={() => pieceStore.loadMore()} />
+        }
       </div>
     );
   })

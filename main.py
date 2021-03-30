@@ -80,7 +80,6 @@ def artist():
         a.pop('_id')
         id = str(a.get('id'))
         out[id] = a
-        out[id].pop('id')
 
     return out
 
@@ -113,6 +112,21 @@ def get_advanced_results():
     # return out
     return dict(enumerate(out))
 
+@app.route('/get_k_nearest', methods=['GET'])
+def get_k_nearest():
+    id = request.args.get('id')
+    results = []
+    for a in mongo.db.art.find({'id': id}):
+        if 'most_similar' in a:
+            results = [str(int(x)) for x in a['most_similar']]
+            break
+    print(results)
+    keys = results[:5000]
+    out = OrderedDict((k, None) for k, _ in enumerate(keys))
+    for a in mongo.db.art.find({'id': {'$in': results[:5000]}}):
+        a.pop('_id')
+        out[keys.index(a['id'])] = a
+    return dict(out)
 
 if __name__ == '__main__':
     app.run(debug=True)
