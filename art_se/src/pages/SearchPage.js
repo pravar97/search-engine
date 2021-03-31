@@ -144,6 +144,12 @@ const SearchPage = inject("pieceStore")(
                           <option>Architecture</option>
                           <option>Sculpture</option>
                           <option>Graphics</option>
+                          <option>Prints</option>
+                          <option>Photograph</option>
+                          <option>Design</option>
+                          <option>Video</option>
+                          <option>Film</option>
+
                         </Form.Control>
                       </Form.Group>
                     </Form.Row>
