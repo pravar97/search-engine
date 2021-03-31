@@ -103,7 +103,7 @@ def get_advanced_results():
         out = dict.fromkeys(results[:5000])
 
     if form:
-        query["form"] = form
+        query["form_lower"] = form
 
     for a in mongo.db.art.find(query).limit(5001):
         a.pop('_id')
