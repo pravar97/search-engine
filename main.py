@@ -9,9 +9,8 @@ from collections import OrderedDict
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 CORS(app)
-app.config['SECRET_KEY'] = 'hijhih'
-app.config['MONGO_URI'] = \
-    "mongodb+srv://jacob:1mfeelingartsy@artdb-cluster.genfb.mongodb.net/artdb?retryWrites=true&w=majority"
+app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', 'default_secret_key')
+app.config['MONGO_URI'] = os.environ.get('MONGO_URI')
 mongo = PyMongo(app)
 '''
 Table: artists
