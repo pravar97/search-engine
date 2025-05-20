@@ -44,8 +44,12 @@ def makeIndex(docs):
 
 
 def main(field):
-    myclient = pymongo.MongoClient("mongodb+srv://jacob:1mfeelingartsy@artdb-cluster.genfb.mongodb.net/artdb"
-                                   "?retryWrites=true&w=majority")
+    
+    username = os.getenv("MONGO_USERNAME")
+    password = os.getenv("MONGO_PASSWORD")
+    connection_string = f"mongodb+srv://{username}:{password}@artdb-cluster.genfb.mongodb.net/artdb?retryWrites=true&w=majority"
+    
+    myclient = pymongo.MongoClient(connection_string)
     mydb = myclient["artdb"]
 
     docs = {}
